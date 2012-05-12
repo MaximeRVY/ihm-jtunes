@@ -30,4 +30,12 @@ public class PlayController {
 	public void stop(){
 		playModel.stop();
 	}
+	
+	public void changeVolume(float volume){
+		playModel.setVolume(volume);
+	} 
+	
+	public void changePosition(int position){
+		playModel.setPosition(position);
+	}
 }
