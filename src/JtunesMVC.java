@@ -29,11 +29,14 @@ public class JtunesMVC {
 	public JtunesMVC() {
 		createFrame();
 		
-		Menu menu = new Menu();
-		this.principalFrame.setJMenuBar(menu);
-		
 		LibraryModel libraryModel = new LibraryModel();
 		PlayModel playModel = new PlayModel();
+		
+		LibraryController controllerLib = new LibraryController(libraryModel);
+		
+		Menu menu = new Menu(controllerLib);
+		this.principalFrame.setJMenuBar(menu);
+			
 		
 		LibraryController controllerHead = new LibraryController(libraryModel);
 		Head vueHaut = new Head(libraryModel, controllerHead, this.principalFrame);
