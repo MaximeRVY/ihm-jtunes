@@ -79,12 +79,25 @@ public class LibraryModel extends Observable{
 				try { genre = tag.getFrame("TCO").toString();}catch(Exception e){}
 			}
 		}
-		if(title.isEmpty())
+		if(title.isEmpty()){
 			title = "Sans Titre";
-		if(artist.isEmpty())
+		}	
+		else if(title.startsWith("??TT2 :")){
+			title = title.split("\\?\\?TT2 :")[1].trim();
+		}
+			
+		if(artist.isEmpty()){
 			artist = "Inconnu";
-		if(album.isEmpty())
+		}else if(artist.startsWith("??TP1 :")){
+			artist = artist.split("\\?\\?TP1 :")[1].trim();
+		}
+			
+		if(album.isEmpty()){
 			album = "Album Inconnu";
+		}else if(album.startsWith("??TAL :")){
+			album = album.split("\\?\\?TAL :")[1].trim();
+		}
+			
 	   if(genre.isEmpty())
 		   genre = "Genre Inconnu";
 	   if(year.isEmpty())
@@ -125,7 +138,7 @@ public class LibraryModel extends Observable{
 					notifyObservers();
 					count_files += 1;
 				} catch (Exception e) {
-					// Do nothing
+					e.printStackTrace();
 				}
 			}
 				
