@@ -40,6 +40,7 @@ public class AllFiles implements Observer {
 		//Color
 		this.allFilesPanel.setBackground(Color.RED);
 		
+		// Model de la table non editable
 		modelTable = new DefaultTableModel(new String[] {"Titre","Artiste","Album","Durée"},0){
 			private static final long serialVersionUID = 1L;
 
@@ -49,11 +50,15 @@ public class AllFiles implements Observer {
 			}
 		};
 		this.table = new JTable(modelTable);
+		// Largeur des colonnes
 		for(int i=0 ; i<this.table.getColumnCount() ; i++)
 			this.table.getColumnModel().getColumn(i).setMinWidth(50);
 		this.table.getColumnModel().getColumn(3).setMaxWidth(100);
+		// Tri automatique sur la colonne
+		this.table.setAutoCreateRowSorter(true);
 		JScrollPane scrollPane = new JScrollPane(table);
 		this.allFilesPanel.add(scrollPane);
+		//ligne de test
 		modelTable.addRow(new String[] {"L'IHM ça pue","Damien Level & Maxime Raverdy","Vivement les vacances","3:30"});
 		
 		this.model.addObserver(this);
