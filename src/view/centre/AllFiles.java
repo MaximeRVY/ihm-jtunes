@@ -113,7 +113,8 @@ public class AllFiles implements Observer {
 		String album = (String) bibliotheque.get(bibliotheque.size()-1).get("album");
 		String genre = (String) bibliotheque.get(bibliotheque.size()-1).get("genre");
 		String year = (String) bibliotheque.get(bibliotheque.size()-1).get("year");
-		this.modelTable.addRow(new String[] {title, artist, album, "0", genre, year});
+		String duration = (String) bibliotheque.get(bibliotheque.size()-1).get("duration");
+		this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year});
 	}
 
 }
