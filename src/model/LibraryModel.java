@@ -25,30 +25,29 @@ public class LibraryModel extends Observable{
 	}
 	
 	public void SaveFileInModel(String path){
-		Map<String,Object> file = getInformationForSave(path);
+		Map<String, Object> file;
+		try {
+			file = getInformationForSave(path);
+			this.last_id += 1;
+			file.put("id",this.last_id);
+			
+			this.bibliotheque.add(file);
+			setChanged();
+			notifyObservers();
+		} catch (Exception e) {
+			// Do nothing for the moment
+		}
 		
-		this.last_id += 1;
-		file.put("id",this.last_id);
 		
-		this.bibliotheque.add(file);
-		setChanged();
-		notifyObservers();
 	}
 	
-	private Map<String,Object> getInformationForSave(String path){
+	private Map<String,Object> getInformationForSave(String path) throws Exception{
 		File file = new File(path);
 		MP3File mp3;
 		Map<String,Object> informationsFile = new HashMap<String, Object>();
-		try {
-			mp3 = new MP3File(file);
-			informationsFile = getInformationsMp3(mp3);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TagException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		mp3 = new MP3File(file);
+		informationsFile = getInformationsMp3(mp3);
+		
 		
 		informationsFile.put("pathname", path);
 		
@@ -82,7 +81,7 @@ public class LibraryModel extends Observable{
 			}
 		}
 		if(title.isEmpty())
-			title = "Sans Tittre";
+			title = "Sans Titre";
 		if(artist.isEmpty())
 			artist = "Inconnu";
 		if(album.isEmpty())
@@ -103,4 +102,61 @@ public class LibraryModel extends Observable{
 		return retour;
 		
 	}
+
+	public void saveFolderInModel(String absolutePath) {
+		File folder = new File(absolutePath);
+		
+		List<File> files = new ArrayList<File>();
+		addFilesRecursively(folder, files);
+		
+		Integer count_files = 1;
+		
+		for(File file : files){
+			if(isMp3(file)){
+				Map<String, Object> fileInfo;
+				try {
+					fileInfo = getInformationForSave(file.getAbsolutePath());
+					if(fileInfo.get("title").equals("Sans Titre")){
+						fileInfo.put("title", "Sans Titre "+count_files);
+					}
+					this.last_id += 1;
+					fileInfo.put("id",this.last_id);
+					this.bibliotheque.add(fileInfo);
+					setChanged();
+					notifyObservers();
+					count_files += 1;
+				} catch (Exception e) {
+					// Do nothing
+				}
+			}
+				
+		}
+		
+		
+	
+	}
+	
+	private Boolean isMp3(File file){
+		String fileName = file.getName();
+		int mid= fileName.lastIndexOf(".");
+		String ext;
+		if(mid > 0){
+			ext=fileName.substring(mid+1,fileName.length());
+			if("mp3".equals(ext)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void addFilesRecursively(File file, List<File> all) {
+	    final File[] children = file.listFiles();
+	    if (children != null) {
+	        for (File child : children) {
+	            all.add(child);
+	            addFilesRecursively(child, all);
+	        }
+	    }
+	}
+
 }

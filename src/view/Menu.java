@@ -34,6 +34,18 @@ public class Menu extends JMenuBar{
 		});
 		menu.add(menuItemImport);
 		
+		menuItemImport = new JMenuItem("Import Folder");
+		
+		menuItemImport.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				ImportFolder();
+				
+			}
+		});
+		menu.add(menuItemImport);
+		
 		JMenuItem menuItem = new JMenuItem("Exit");
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -41,10 +53,24 @@ public class Menu extends JMenuBar{
 			}
 		});
 		menu.add(menuItem);
+		
+	}
+	
+	private void ImportFolder(){
+		final JFileChooser fileChoose = new JFileChooser("./");
+		fileChoose.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		
+		int returnVal = fileChoose.showOpenDialog(new JPanel());
+		if (returnVal == JFileChooser.APPROVE_OPTION){
+			File file = fileChoose.getSelectedFile();
+			controller.importFolder(file.getAbsolutePath());
+		}
 	}
 	
 	private void ImportFile(){
 		final JFileChooser fileChoose = new JFileChooser("./");
+		
+		fileChoose.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		
 		int returnVal = fileChoose.showOpenDialog(new JPanel());
 				

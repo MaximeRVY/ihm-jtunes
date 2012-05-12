@@ -12,4 +12,8 @@ public class LibraryController {
 	public void importFile(String path){
 		model.SaveFileInModel(path);
 	}
+
+	public void importFolder(String absolutePath) {
+		model.saveFolderInModel(absolutePath);		
+	}
 }
