@@ -43,7 +43,7 @@ public class AllFiles implements Observer {
 		this.allFilesPanel.setBackground(Color.RED);
 		
 		// Model de la table non editable
-		this.modelTable = new DefaultTableModel(new String[] {"Title","Artist","Album","Length"},0){
+		this.modelTable = new DefaultTableModel(new String[] {"Title","Artist","Album","Time","Genre","Year"},0){
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -56,6 +56,7 @@ public class AllFiles implements Observer {
 		for(int i=0 ; i<this.table.getColumnCount() ; i++)
 			this.table.getColumnModel().getColumn(i).setMinWidth(50);
 		this.table.getColumnModel().getColumn(3).setMaxWidth(100);
+		this.table.getColumnModel().getColumn(5).setMaxWidth(100);
 		// Tri automatique sur la colonne
 		this.table.setAutoCreateRowSorter(true);
 		JScrollPane scrollPane = new JScrollPane(table);
@@ -79,7 +80,9 @@ public class AllFiles implements Observer {
 		String title = (String) bibliotheque.get(bibliotheque.size()-1).get("title");
 		String artist = (String) bibliotheque.get(bibliotheque.size()-1).get("artist");
 		String album = (String) bibliotheque.get(bibliotheque.size()-1).get("album");
-		this.modelTable.addRow(new String[] {title, artist, album});
+		String genre = (String) bibliotheque.get(bibliotheque.size()-1).get("genre");
+		String year = (String) bibliotheque.get(bibliotheque.size()-1).get("year");
+		this.modelTable.addRow(new String[] {title, artist, album, "0", genre, year});
 	}
 
 }

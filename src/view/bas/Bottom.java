@@ -5,9 +5,12 @@ import java.awt.Dimension;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 
 import model.PlayModel;
 import controller.PlayController;
@@ -18,6 +21,10 @@ public class Bottom implements Observer {
 	private PlayController controller;
 	private PlayModel model;
 	private JPanel panelBottom;
+	private JButton previous;
+	private JButton playPause;
+	private JButton next;
+	private JSlider sliderTime;
 	
 	public Bottom(JFrame principalFrame, PlayModel playModel, PlayController playController){
 		this.principalFrame = principalFrame;
@@ -35,6 +42,28 @@ public class Bottom implements Observer {
 		
 		// Color
 		this.panelBottom.setBackground(Color.BLUE);
+		
+		previous = new JButton("Previous");
+		
+		playPause = new JButton("Play / Pause");
+		
+		next = new JButton("Next");
+		
+		sliderTime = new JSlider(0,100,0);
+		sliderTime.setPreferredSize(new Dimension(200,30));
+		sliderTime.setMinimumSize(new Dimension(200,30));
+		sliderTime.setMaximumSize(new Dimension(200,30));
+		sliderTime.setEnabled(false);
+		
+		this.panelBottom.add(Box.createRigidArea(new Dimension(20, 0)));
+		this.panelBottom.add(previous);
+		this.panelBottom.add(Box.createRigidArea(new Dimension(10, 0)));
+		this.panelBottom.add(playPause);
+		this.panelBottom.add(Box.createRigidArea(new Dimension(10, 0)));
+		this.panelBottom.add(next);
+		this.panelBottom.add(Box.createRigidArea(new Dimension(20, 0)));
+		this.panelBottom.add(sliderTime);
+		this.panelBottom.add(Box.createRigidArea(new Dimension(20, 0)));
 		
 		this.model.addObserver(this);
 		
