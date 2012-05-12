@@ -69,7 +69,8 @@ public class JtunesMVC {
 		LeftMenu leftMenu = leftContainer.getLeftContainer();
 		
 		LibraryController libControllerCenter = new LibraryController(libraryModel);
-		AllFiles allFiles = new AllFiles(panelCentre, libraryModel, libControllerCenter);
+		PlayController playControllerCenter = new PlayController(playModel, libraryModel);
+		AllFiles allFiles = new AllFiles(panelCentre, libraryModel, libControllerCenter, playControllerCenter);
 		
 		
 		

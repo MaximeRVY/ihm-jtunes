@@ -17,20 +17,23 @@ import javax.swing.table.DefaultTableModel;
 
 import model.LibraryModel;
 import controller.LibraryController;
+import controller.PlayController;
 
 public class AllFiles implements Observer {
 
 	private JPanel panelCentre;
 	private LibraryModel model;
-	private LibraryController controller;
+	private LibraryController libraryController;
+	private PlayController playController;
 	private JPanel allFilesPanel;
 	private JTable table;
 	private DefaultTableModel modelTable;
 	
-	public AllFiles(JPanel panelCentre, LibraryModel model, LibraryController controller){
+	public AllFiles(JPanel panelCentre, LibraryModel model, LibraryController libraryController, PlayController playController){
 		this.panelCentre = panelCentre;
 		this.model = model;
-		this.controller = controller;
+		this.libraryController = libraryController;
+		this.playController = playController;
 		createAllFiles();
 	}
 	
@@ -42,7 +45,7 @@ public class AllFiles implements Observer {
 		this.allFilesPanel.setLayout(new BoxLayout(this.allFilesPanel, BoxLayout.Y_AXIS));
 		
 		// Model de la table non editable
-		this.modelTable = new DefaultTableModel(new String[] {"Title","Artist","Album","Time","Genre","Year"},0){
+		this.modelTable = new DefaultTableModel(new String[] {"Title","Artist","Album","Time","Genre","Year","id"},0){
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -52,10 +55,13 @@ public class AllFiles implements Observer {
 		};
 		this.table = new JTable(modelTable);
 		// Largeur des colonnes
-		for(int i=0 ; i<this.table.getColumnCount() ; i++)
+		for(int i=0 ; i<this.table.getColumnCount()-1 ; i++)
 			this.table.getColumnModel().getColumn(i).setMinWidth(50);
 		this.table.getColumnModel().getColumn(3).setMaxWidth(100);
 		this.table.getColumnModel().getColumn(5).setMaxWidth(100);
+		this.table.getColumnModel().getColumn(6).setPreferredWidth(0);
+		this.table.getColumnModel().getColumn(6).setMinWidth(0);
+		this.table.getColumnModel().getColumn(6).setMaxWidth(0);
 		// Tri automatique sur la colonne
 		this.table.setAutoCreateRowSorter(true);
 		// Ajout du double clic
@@ -63,7 +69,8 @@ public class AllFiles implements Observer {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if(arg0.getClickCount() == 2)
-					System.out.println("Lecture");
+					//System.out.println(Integer.valueOf((String) (modelTable.getValueAt(table.getSelectedRow(), 6))));
+					playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.getSelectedRow(), 6))));
 			}
 
 			@Override
@@ -112,7 +119,9 @@ public class AllFiles implements Observer {
 			String genre = (String) bibliotheque.get(bibliotheque.size()-1).get("genre");
 			String year = (String) bibliotheque.get(bibliotheque.size()-1).get("year");
 			String duration = (String) bibliotheque.get(bibliotheque.size()-1).get("duration");
-			this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year});
+			Integer id = (Integer) bibliotheque.get(bibliotheque.size()-1).get("id");
+			System.out.println(bibliotheque.get(bibliotheque.size()-1).get("pathname"));
+			this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString()});
 		}else{
 			for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
 				this.modelTable.removeRow(i);
@@ -124,8 +133,9 @@ public class AllFiles implements Observer {
 				String genre = (String) bibliotheque.get(i).get("genre");
 				String year = (String) bibliotheque.get(i).get("year");
 				String duration = (String) bibliotheque.get(i).get("duration");
+				Integer id = (Integer) bibliotheque.get(i).get("id");
 				if(title.toLowerCase().contains(filter) || artist.toLowerCase().contains(filter) || album.toLowerCase().contains(filter) || genre.toLowerCase().contains(filter))
-					this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year});
+					this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString()});
 			}
 		}
 	}
