@@ -3,6 +3,8 @@ package view.haut;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -42,9 +44,30 @@ public class Head implements Observer{
 		
 		this.headPanel.add(Box.createRigidArea(new Dimension(15, 0)));
 		
+		this.searchText.setToolTipText("Search");
 		this.searchText.setMinimumSize(new Dimension(150, 25));
 		this.searchText.setMinimumSize(new Dimension(150, 25));
 		this.searchText.setMaximumSize(new Dimension(150, 25));
+		// Ajout d'un listener sur searchText
+		this.searchText.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+				model.getBibliotheque();
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		this.headPanel.add(this.searchText);
 		
 		this.principalFrame.getContentPane().add(this.headPanel);
