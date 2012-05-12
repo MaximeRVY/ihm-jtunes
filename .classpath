@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry exported="true" kind="lib" path="/home/maxime/cours/M1S2/IHM/jid3lib-0.5.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Damien/Downloads/jid3lib-0.5.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Damien/Downloads/jl1.0.1.modified.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,7 +1,6 @@
 package model;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.Map;
 import java.util.Observable;
 
 import org.farng.mp3.MP3File;
-import org.farng.mp3.TagException;
 import org.farng.mp3.id3.AbstractID3v1;
 import org.farng.mp3.id3.AbstractID3v2;
 
@@ -60,6 +58,7 @@ public class LibraryModel extends Observable{
 		
 		
 		String title="", artist="", album="", genre="", year="";
+		int duration =0;
 		
 		if(mp3.hasID3v1Tag()){
 			AbstractID3v1 tag = mp3.getID3v1Tag();

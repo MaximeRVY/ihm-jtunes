@@ -2,6 +2,8 @@ package view.centre;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -41,7 +43,7 @@ public class AllFiles implements Observer {
 		this.allFilesPanel.setBackground(Color.RED);
 		
 		// Model de la table non editable
-		modelTable = new DefaultTableModel(new String[] {"Titre","Artiste","Album","Durée"},0){
+		this.modelTable = new DefaultTableModel(new String[] {"Title","Artist","Album","Length"},0){
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -58,8 +60,6 @@ public class AllFiles implements Observer {
 		this.table.setAutoCreateRowSorter(true);
 		JScrollPane scrollPane = new JScrollPane(table);
 		this.allFilesPanel.add(scrollPane);
-		//ligne de test
-		modelTable.addRow(new String[] {"L'IHM ça pue","Damien Level & Maxime Raverdy","Vivement les vacances","3:30"});
 		
 		this.model.addObserver(this);
 		
@@ -68,8 +68,18 @@ public class AllFiles implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
+		// Suppression des donnees de la table
+		/*for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
+			this.modelTable.removeRow(i);*/
+		List<Map<String,Object>> bibliotheque = this.model.getBibliotheque();
+		// Ajout de toute la bibliotheque
+		/*for(int i=0; i<bibliotheque.size() ; i++)
+			this.modelTable.addRow(new String[] {(String) bibliotheque.get(i).get("title")});*/
+		// Ajout du dernier element de la bibliotheque
+		String title = (String) bibliotheque.get(bibliotheque.size()-1).get("title");
+		String artist = (String) bibliotheque.get(bibliotheque.size()-1).get("artist");
+		String album = (String) bibliotheque.get(bibliotheque.size()-1).get("album");
+		this.modelTable.addRow(new String[] {title, artist, album});
 	}
 
 }
