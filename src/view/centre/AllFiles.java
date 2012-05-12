@@ -41,9 +41,6 @@ public class AllFiles implements Observer {
 		this.allFilesPanel.setMaximumSize(new Dimension(600,650));
 		this.allFilesPanel.setLayout(new BoxLayout(this.allFilesPanel, BoxLayout.Y_AXIS));
 		
-		//Color
-		this.allFilesPanel.setBackground(Color.RED);
-		
 		// Model de la table non editable
 		this.modelTable = new DefaultTableModel(new String[] {"Title","Artist","Album","Time","Genre","Year"},0){
 			private static final long serialVersionUID = 1L;
