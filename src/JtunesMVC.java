@@ -54,6 +54,8 @@ public class JtunesMVC {
 		LibraryController libControllerCenter = new LibraryController(libraryModel);
 		AllFiles allFiles = new AllFiles(panelCentre, libraryModel, libControllerCenter);
 		
+		
+		
 		this.principalFrame.getContentPane().add(panelCentre);
 		
 		PlayController playControllerBottom = new PlayController(playModel);

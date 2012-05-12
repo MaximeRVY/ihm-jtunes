@@ -9,7 +9,7 @@ public class LibraryController {
 		this.model = model;
 	}
 	
-	public void addView(){
-		
+	public void importFile(String path){
+		model.SaveFileInModel(path);
 	}
 }
