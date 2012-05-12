@@ -100,21 +100,34 @@ public class AllFiles implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		// Suppression des donnees de la table
-		/*for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
-			this.modelTable.removeRow(i);*/
 		List<Map<String,Object>> bibliotheque = this.model.getBibliotheque();
-		// Ajout de toute la bibliotheque
-		/*for(int i=0; i<bibliotheque.size() ; i++)
-			this.modelTable.addRow(new String[] {(String) bibliotheque.get(i).get("title")});*/
-		// Ajout du dernier element de la bibliotheque
-		String title = (String) bibliotheque.get(bibliotheque.size()-1).get("title");
-		String artist = (String) bibliotheque.get(bibliotheque.size()-1).get("artist");
-		String album = (String) bibliotheque.get(bibliotheque.size()-1).get("album");
-		String genre = (String) bibliotheque.get(bibliotheque.size()-1).get("genre");
-		String year = (String) bibliotheque.get(bibliotheque.size()-1).get("year");
-		String duration = (String) bibliotheque.get(bibliotheque.size()-1).get("duration");
-		this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year});
+		if(arg==null){
+			// Ajout de toute la bibliotheque
+			/*for(int i=0; i<bibliotheque.size() ; i++)
+				this.modelTable.addRow(new String[] {(String) bibliotheque.get(i).get("title")});*/
+			// Ajout du dernier element de la bibliotheque
+			String title = (String) bibliotheque.get(bibliotheque.size()-1).get("title");
+			String artist = (String) bibliotheque.get(bibliotheque.size()-1).get("artist");
+			String album = (String) bibliotheque.get(bibliotheque.size()-1).get("album");
+			String genre = (String) bibliotheque.get(bibliotheque.size()-1).get("genre");
+			String year = (String) bibliotheque.get(bibliotheque.size()-1).get("year");
+			String duration = (String) bibliotheque.get(bibliotheque.size()-1).get("duration");
+			this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year});
+		}else{
+			for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
+				this.modelTable.removeRow(i);
+			String filter = ((String) arg).toLowerCase();
+			for(int i=0; i<bibliotheque.size() ; i++){
+				String title = (String) bibliotheque.get(i).get("title");
+				String artist = (String) bibliotheque.get(i).get("artist");
+				String album = (String) bibliotheque.get(i).get("album");
+				String genre = (String) bibliotheque.get(i).get("genre");
+				String year = (String) bibliotheque.get(i).get("year");
+				String duration = (String) bibliotheque.get(i).get("duration");
+				if(title.toLowerCase().contains(filter) || artist.toLowerCase().contains(filter) || album.toLowerCase().contains(filter) || genre.toLowerCase().contains(filter))
+					this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year});
+			}
+		}
 	}
 
 }

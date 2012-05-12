@@ -53,12 +53,12 @@ public class Head implements Observer{
 			
 			@Override
 			public void keyTyped(KeyEvent arg0) {
-				model.getBibliotheque();
+				
 			}
 			
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				// TODO Auto-generated method stub
+				model.editJTable(searchText.getText());
 				
 			}
 			

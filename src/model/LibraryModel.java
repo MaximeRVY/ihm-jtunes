@@ -210,4 +210,10 @@ public class LibraryModel extends Observable{
 		
 	}
 
+	public void editJTable(String filter){
+		if(filter==null)
+			filter="";
+		setChanged();
+		notifyObservers(filter);
+	}
 }
