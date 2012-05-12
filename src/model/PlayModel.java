@@ -44,7 +44,7 @@ public class PlayModel extends Observable{
 			load(this.currentPlayed);
 			PlayPause();
 		}else if(state == 1){
-			LaunchListenThread llt = new LaunchListenThread(player);
+			LaunchListenThread llt = new LaunchListenThread(player,this);
 			llt.start();
 			state = 2;
 		}else if(state == 2){
@@ -77,30 +77,44 @@ public class PlayModel extends Observable{
 		player.setPosition(pos);
 		position = pos;
 	}
+	
+	public void sendToObservable(){
+		setChanged();
+		notifyObservers();
+	}
 
 
 	class LaunchListenThread extends Thread{
 		private LillePlayer playerInterne;
-		public LaunchListenThread(LillePlayer p){
+		private PlayModel parent;
+		public LaunchListenThread(LillePlayer p,PlayModel parent){
 			playerInterne = p;
+			this.parent = parent;
+			
 		}
 		public void run(){
 			try{			
-				System.out.println("LaunchEvent");
+				parent.sendToObservable();
 				PlayThread pt = new PlayThread();
 				pt.start();
 				
 				while(!playerInterne.isComplete()){
 					position = playerInterne.getPosition();
-					if(player == playerInterne)
+					if(player == playerInterne){
 						System.out.println("PositionEvent");
+						parent.sendToObservable();
+					}
+						
 					try{
 						Thread.sleep(200);
 					}catch(Exception e){ e.printStackTrace(); }
 				}
 				
-				if(player == playerInterne)
+				if(player == playerInterne){
 					System.out.println("EndEvent");
+					parent.sendToObservable();
+				}
+					
 			}catch(Exception e){ e.printStackTrace(); }
 		}
 		
