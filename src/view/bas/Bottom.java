@@ -2,6 +2,8 @@ package view.bas;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -12,6 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import model.PlayModel;
 import controller.PlayController;
@@ -47,6 +51,14 @@ public class Bottom implements Observer {
 		previous = new JButton("Previous");
 		
 		playPause = new JButton("Play / Pause");
+		playPause.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				controller.playPause();
+				
+			}
+		});
 		
 		next = new JButton("Next");
 		
@@ -66,6 +78,14 @@ public class Bottom implements Observer {
 		sliderVolume.setPreferredSize(new Dimension(100,20));
 		sliderVolume.setMinimumSize(new Dimension(100,20));
 		sliderVolume.setMaximumSize(new Dimension(100,20));
+		sliderVolume.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				controller.changeVolume(new Integer(sliderVolume.getValue()).floatValue());
+				
+			}
+		});
 		
 		this.panelBottom.add(Box.createRigidArea(new Dimension(20, 0)));
 		this.panelBottom.add(previous);
