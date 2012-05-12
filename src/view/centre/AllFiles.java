@@ -7,6 +7,9 @@ import java.util.Observer;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import model.LibraryModel;
 import controller.LibraryController;
@@ -17,6 +20,8 @@ public class AllFiles implements Observer {
 	private LibraryModel model;
 	private LibraryController controller;
 	private JPanel allFilesPanel;
+	private JTable table;
+	private DefaultTableModel modelTable;
 	
 	public AllFiles(JPanel panelCentre, LibraryModel model, LibraryController controller){
 		this.panelCentre = panelCentre;
@@ -34,6 +39,22 @@ public class AllFiles implements Observer {
 		
 		//Color
 		this.allFilesPanel.setBackground(Color.RED);
+		
+		modelTable = new DefaultTableModel(new String[] {"Titre","Artiste","Album","Durée"},0){
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		this.table = new JTable(modelTable);
+		for(int i=0 ; i<this.table.getColumnCount() ; i++)
+			this.table.getColumnModel().getColumn(i).setMinWidth(50);
+		this.table.getColumnModel().getColumn(3).setMaxWidth(100);
+		JScrollPane scrollPane = new JScrollPane(table);
+		this.allFilesPanel.add(scrollPane);
+		modelTable.addRow(new String[] {"L'IHM ça pue","Damien Level & Maxime Raverdy","Vivement les vacances","3:30"});
 		
 		this.model.addObserver(this);
 		
