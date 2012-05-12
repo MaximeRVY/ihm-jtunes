@@ -136,6 +136,10 @@ public class LibraryModel extends Observable{
 	
 	}
 	
+	public List<Map<String, Object>> getBibliotheque() {
+		return bibliotheque;
+	}
+
 	private Boolean isMp3(File file){
 		String fileName = file.getName();
 		int mid= fileName.lastIndexOf(".");
