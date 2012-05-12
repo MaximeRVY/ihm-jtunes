@@ -18,9 +18,8 @@ public class PlayController {
 	public void loadAndPlay(Integer id){
 		System.out.println(id);
 		Map<String, Object> file = libraryModel.findById(id);
-		System.out.println(file.get("id"));
-		/*playModel.load(file);
-		playModel.PlayPause();*/
+		playModel.load(file);
+		playModel.PlayPause();
 	}
 	
 	public void playPause(){

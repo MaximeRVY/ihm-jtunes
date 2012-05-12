@@ -101,17 +101,15 @@ public class PlayModel extends Observable{
 				while(!playerInterne.isComplete()){
 					position = playerInterne.getPosition();
 					if(player == playerInterne){
-						System.out.println("PositionEvent");
 						parent.sendToObservable();
 					}
 						
 					try{
-						Thread.sleep(200);
+						Thread.sleep(1000);
 					}catch(Exception e){ e.printStackTrace(); }
 				}
 				
 				if(player == playerInterne){
-					System.out.println("EndEvent");
 					parent.sendToObservable();
 				}
 					
