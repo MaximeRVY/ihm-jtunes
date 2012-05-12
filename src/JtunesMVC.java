@@ -62,7 +62,7 @@ public class JtunesMVC {
 		panelCentre.setLayout(new BoxLayout(panelCentre, BoxLayout.X_AXIS));
 		
 		LibraryController libControllerLeft = new LibraryController(libraryModel);
-		PlayController playControllerLeft = new PlayController(playModel);
+		PlayController playControllerLeft = new PlayController(playModel, libraryModel);
 		LeftContainer leftContainer = new LeftContainer(panelCentre, libControllerLeft, libraryModel, playControllerLeft, playModel);
 		
 		InPlay inPlay = leftContainer.getInPlay();
@@ -75,7 +75,7 @@ public class JtunesMVC {
 		
 		this.principalFrame.getContentPane().add(panelCentre);
 		
-		PlayController playControllerBottom = new PlayController(playModel);
+		PlayController playControllerBottom = new PlayController(playModel, libraryModel);
 		Bottom bottom = new Bottom(this.principalFrame, playModel, playControllerBottom);
 		
 		this.principalFrame.setSize(new Dimension(800, 600));

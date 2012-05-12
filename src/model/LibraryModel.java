@@ -200,4 +200,14 @@ public class LibraryModel extends Observable{
 		
 	}
 
+	public Map<String, Object> findById(Integer id) {
+		for(Map<String, Object> file : this.bibliotheque){
+			if( ((String) file.get("id")).equals(id) ){
+				return file;
+			}
+		}
+		return null;
+		
+	}
+
 }
