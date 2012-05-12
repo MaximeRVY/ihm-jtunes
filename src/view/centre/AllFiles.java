@@ -2,6 +2,8 @@ package view.centre;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -59,6 +61,38 @@ public class AllFiles implements Observer {
 		this.table.getColumnModel().getColumn(5).setMaxWidth(100);
 		// Tri automatique sur la colonne
 		this.table.setAutoCreateRowSorter(true);
+		// Ajout du double clic
+		this.table.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(arg0.getClickCount() == 2)
+					System.out.println("Lecture");
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		JScrollPane scrollPane = new JScrollPane(table);
 		this.allFilesPanel.add(scrollPane);
 		
