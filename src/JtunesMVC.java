@@ -39,9 +39,9 @@ public class JtunesMVC {
 		Head vueHaut = new Head(libraryModel, controllerHead, this.principalFrame);
 		
 		JPanel panelCentre = new JPanel();
-		panelCentre.setPreferredSize(new Dimension(800,650));
-		panelCentre.setMinimumSize(new Dimension(800,650));
-		panelCentre.setMaximumSize(new Dimension(800,650));
+		panelCentre.setPreferredSize(new Dimension(800,550));
+		panelCentre.setMinimumSize(new Dimension(800,550));
+		panelCentre.setMaximumSize(new Dimension(800,550));
 		panelCentre.setLayout(new BoxLayout(panelCentre, BoxLayout.X_AXIS));
 		
 		LibraryController libControllerLeft = new LibraryController(libraryModel);

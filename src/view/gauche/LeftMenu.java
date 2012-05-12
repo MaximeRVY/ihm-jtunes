@@ -27,9 +27,9 @@ public class LeftMenu implements Observer {
 	
 	private void createLeftMenu(){
 		this.panelLeftMenu = new JPanel();
-		this.panelLeftMenu.setPreferredSize(new Dimension(200,400));
-		this.panelLeftMenu.setMinimumSize(new Dimension(200,400));
-		this.panelLeftMenu.setMaximumSize(new Dimension(200,400));
+		this.panelLeftMenu.setPreferredSize(new Dimension(200,350));
+		this.panelLeftMenu.setMinimumSize(new Dimension(200,350));
+		this.panelLeftMenu.setMaximumSize(new Dimension(200,350));
 		this.panelLeftMenu.setLayout(new BoxLayout(this.panelLeftMenu, BoxLayout.Y_AXIS));
 		
 		// Color

@@ -27,9 +27,9 @@ public class InPlay implements Observer{
 	
 	private void createInPlay(){
 		this.panelInPlay = new JPanel();
-		this.panelInPlay.setPreferredSize(new Dimension(200,250));
-		this.panelInPlay.setMinimumSize(new Dimension(200,250));
-		this.panelInPlay.setMaximumSize(new Dimension(200,250));
+		this.panelInPlay.setPreferredSize(new Dimension(200,200));
+		this.panelInPlay.setMinimumSize(new Dimension(200,200));
+		this.panelInPlay.setMaximumSize(new Dimension(200,200));
 		this.panelInPlay.setLayout(new BoxLayout(this.panelInPlay, BoxLayout.Y_AXIS));
 		
 		//color

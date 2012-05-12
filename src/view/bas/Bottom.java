@@ -28,9 +28,9 @@ public class Bottom implements Observer {
 	
 	private void createBottom(){
 		this.panelBottom = new JPanel();
-		this.panelBottom.setPreferredSize(new Dimension(800,100));
-		this.panelBottom.setMinimumSize(new Dimension(800,100));
-		this.panelBottom.setMaximumSize(new Dimension(800,100));
+		this.panelBottom.setPreferredSize(new Dimension(800,70));
+		this.panelBottom.setMinimumSize(new Dimension(800,70));
+		this.panelBottom.setMaximumSize(new Dimension(800,70));
 		this.panelBottom.setLayout(new BoxLayout(this.panelBottom, BoxLayout.X_AXIS));
 		
 		// Color

@@ -31,9 +31,9 @@ public class LeftContainer{
 	
 	private void createLeftContainer(){
 		this.panelGauche = new JPanel();
-		this.panelGauche.setPreferredSize(new Dimension(200,650));
-		this.panelGauche.setMinimumSize(new Dimension(200,650));
-		this.panelGauche.setMaximumSize(new Dimension(200,650));
+		this.panelGauche.setPreferredSize(new Dimension(200,550));
+		this.panelGauche.setMinimumSize(new Dimension(200,550));
+		this.panelGauche.setMaximumSize(new Dimension(200,550));
 		this.panelGauche.setLayout(new BoxLayout(this.panelGauche, BoxLayout.Y_AXIS));
 		
 		createMenuPanel();
