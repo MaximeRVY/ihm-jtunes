@@ -6,6 +6,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import model.PlayModel;
@@ -17,6 +18,7 @@ public class InPlay implements Observer{
 	private PlayController controller;
 	private PlayModel model;
 	private JPanel panelInPlay;
+	private JPanel panelLect;
 	
 	public InPlay(JPanel panelGauche, PlayModel playModel, PlayController playController){
 		this.panelGauche = panelGauche;
@@ -27,13 +29,19 @@ public class InPlay implements Observer{
 	
 	private void createInPlay(){
 		this.panelInPlay = new JPanel();
-		this.panelInPlay.setPreferredSize(new Dimension(300,200));
-		this.panelInPlay.setMinimumSize(new Dimension(300,200));
-		this.panelInPlay.setMaximumSize(new Dimension(300,200));
-		this.panelInPlay.setLayout(new BoxLayout(this.panelInPlay, BoxLayout.Y_AXIS));
 		
-		//color
-		this.panelInPlay.setBackground(Color.GREEN);
+		this.panelLect = new JPanel();
+		this.panelLect.setPreferredSize(new Dimension(200,200));
+		this.panelLect.setMinimumSize(new Dimension(200,200));
+		this.panelLect.setMaximumSize(new Dimension(200,200));
+		this.panelLect.setLayout(new BoxLayout(this.panelLect, BoxLayout.Y_AXIS));
+		
+		this.panelLect.setBackground(Color.GREEN);
+		
+		this.panelLect.add(new JLabel("coucou"));
+		this.panelLect.add(new JLabel("coucou"));
+		
+		this.panelInPlay.add(this.panelLect);
 		
 		this.model.addObserver(this);
 		

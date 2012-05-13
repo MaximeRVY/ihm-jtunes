@@ -56,10 +56,6 @@ public class LeftMenu implements Observer {
 		this.model.addObserver(this);
 		
 		this.panelGauche.add(this.panelLeftMenu);
-		
-		this.panelLeftMenu.setPreferredSize(new Dimension(300,350));
-		this.panelLeftMenu.setMinimumSize(new Dimension(300,350));
-		this.panelLeftMenu.setMaximumSize(new Dimension(300,350));
 	}
 	
 	@Override
