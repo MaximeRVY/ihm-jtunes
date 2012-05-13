@@ -114,7 +114,22 @@ public class AllFiles implements Observer {
 		
 		this.model.addObserver(this);
 		
-		this.panelCentre.add(this.allFilesPanel);	
+		this.panelCentre.add(this.allFilesPanel);
+		importBibliotheque();
+	}
+	
+	public void importBibliotheque(){
+		List<Map<String,Object>> bibliotheque = this.model.getBibliotheque();
+		for(int i=0; i<bibliotheque.size() ; i++){
+			String title = (String) bibliotheque.get(i).get("title");
+			String artist = (String) bibliotheque.get(i).get("artist");
+			String album = (String) bibliotheque.get(i).get("album");
+			String genre = (String) bibliotheque.get(i).get("genre");
+			String year = (String) bibliotheque.get(i).get("year");
+			String duration = (String) bibliotheque.get(i).get("duration");
+			Integer id = (Integer) bibliotheque.get(i).get("id");
+			this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString()});
+		}
 	}
 	
 	@Override

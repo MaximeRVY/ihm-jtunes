@@ -158,6 +158,11 @@ public class LibraryModel extends Observable{
 	public List<Map<String, Object>> getBibliotheque() {
 		return bibliotheque;
 	}
+	
+	public void importBibliotheque(List<Map<String, Object>> songs){
+		this.bibliotheque.addAll(songs);
+		this.last_id = songs.size();
+	}
 
 	private Boolean isMp3(File file){
 		String fileName = file.getName();
