@@ -1,7 +1,9 @@
 package view.centre;
 
-import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
@@ -9,10 +11,12 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
 
 import model.LibraryModel;
@@ -94,6 +98,15 @@ public class AllFiles implements Observer {
 			public void mouseReleased(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
+			}
+		});
+		// Entrer = play
+		this.table.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "enter-play");
+		this.table.getActionMap().put("enter-play", new AbstractAction(){
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e){
+				playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.getSelectedRow(), 6))));
 			}
 		});
 		JScrollPane scrollPane = new JScrollPane(table);
