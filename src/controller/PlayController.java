@@ -53,4 +53,8 @@ public class PlayController {
 		playModel.setQueue(list);
 	}
 	
+	public void previous(){
+		playModel.previous();
+	}
+	
 }
