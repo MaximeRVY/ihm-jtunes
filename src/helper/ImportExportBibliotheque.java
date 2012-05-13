@@ -37,7 +37,7 @@ public class ImportExportBibliotheque implements Observer{
 			statement.setQueryTimeout(30); 
 			
 			try{
-				statement.executeUpdate("create table songs (id integer,title string, artist string, album string, genre string," +
+				statement.executeUpdate("create table songs (id integer PRIMARY KEY,title string, artist string, album string, genre string," +
 						"year string, duration string, pathname string)");
 			}catch(Exception e){
 				
