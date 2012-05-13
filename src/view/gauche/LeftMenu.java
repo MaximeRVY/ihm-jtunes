@@ -34,9 +34,7 @@ public class LeftMenu implements Observer {
 	
 	private void createLeftMenu(){
 		this.panelLeftMenu = new JPanel();
-		this.panelLeftMenu.setPreferredSize(new Dimension(200,350));
-		this.panelLeftMenu.setMinimumSize(new Dimension(200,350));
-		this.panelLeftMenu.setMaximumSize(new Dimension(200,350));
+		
 		this.panelLeftMenu.setLayout(new BoxLayout(this.panelLeftMenu, BoxLayout.Y_AXIS));
 		
 		// Color
@@ -49,11 +47,19 @@ public class LeftMenu implements Observer {
 		SourceList sourceList = new SourceList(listModel);
 		sourceList.setColorScheme(new SourceListDarkColorScheme());
 		
+		sourceList.getComponent().setPreferredSize(new Dimension(200,350));
+		sourceList.getComponent().setMinimumSize(new Dimension(200,350));
+		sourceList.getComponent().setMaximumSize(new Dimension(200,350));
+		
 		this.panelLeftMenu.add(sourceList.getComponent());
 		
 		this.model.addObserver(this);
 		
 		this.panelGauche.add(this.panelLeftMenu);
+		
+		this.panelLeftMenu.setPreferredSize(new Dimension(300,350));
+		this.panelLeftMenu.setMinimumSize(new Dimension(300,350));
+		this.panelLeftMenu.setMaximumSize(new Dimension(300,350));
 	}
 	
 	@Override
