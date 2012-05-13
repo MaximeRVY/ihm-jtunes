@@ -1,7 +1,12 @@
 package controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import org.farng.mp3.MP3File;
+import org.farng.mp3.TagException;
 
 import model.LibraryModel;
 import model.PlayModel;
@@ -57,4 +62,17 @@ public class PlayController {
 		playModel.previous();
 	}
 	
+	public Map<String,Object> getInformationsMp3(){
+		MP3File mp3 = null;
+		try {
+			mp3 = new MP3File(new File((String) playModel.getCurrentPlayed().get("pathname")));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TagException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return libraryModel.getInformationsMp3(mp3);
+	}
 }

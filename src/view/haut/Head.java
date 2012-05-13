@@ -11,6 +11,7 @@ import java.util.Observer;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -39,15 +40,16 @@ public class Head implements Observer{
 		this.headPanel.setMaximumSize(new Dimension(800,50));
 		this.headPanel.setLayout(new BoxLayout(this.headPanel, BoxLayout.X_AXIS));
 		
-		//color
-		this.headPanel.setBackground(Color.ORANGE);
-		
 		this.headPanel.add(Box.createRigidArea(new Dimension(15, 0)));
 		
+		this.headPanel.add(new JLabel("Search :"));
+		
+		this.headPanel.add(Box.createRigidArea(new Dimension(5, 0)));
+		
 		this.searchText.setToolTipText("Search");
-		this.searchText.setMinimumSize(new Dimension(150, 25));
-		this.searchText.setMinimumSize(new Dimension(150, 25));
-		this.searchText.setMaximumSize(new Dimension(150, 25));
+		this.searchText.setMinimumSize(new Dimension(140, 25));
+		this.searchText.setMinimumSize(new Dimension(140, 25));
+		this.searchText.setMaximumSize(new Dimension(140, 25));
 		// Ajout d'un listener sur searchText
 		this.searchText.addKeyListener(new KeyListener() {
 			

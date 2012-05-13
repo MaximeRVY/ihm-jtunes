@@ -12,9 +12,11 @@ import model.LibraryModel;
 
 import com.explodingpixels.macwidgets.SourceList;
 import com.explodingpixels.macwidgets.SourceListCategory;
+import com.explodingpixels.macwidgets.SourceListClickListener;
 import com.explodingpixels.macwidgets.SourceListDarkColorScheme;
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListModel;
+import com.explodingpixels.macwidgets.SourceListClickListener.Button;
 
 import controller.LibraryController;
 
@@ -37,14 +39,34 @@ public class LeftMenu implements Observer {
 		
 		this.panelLeftMenu.setLayout(new BoxLayout(this.panelLeftMenu, BoxLayout.Y_AXIS));
 		
-		// Color
-		this.panelLeftMenu.setBackground(Color.YELLOW);
-		
 		SourceListModel listModel = new SourceListModel();
-		SourceListCategory category = new SourceListCategory("Category");
-		listModel.addCategory(category);
-		listModel.addItemToCategory(new SourceListItem("Item"), category);
+		SourceListCategory Music = new SourceListCategory("Music");
+		listModel.addCategory(Music);
+		listModel.addItemToCategory(new SourceListItem("My Library"), Music);
+		SourceListCategory Playlist = new SourceListCategory("Playlist");
+		listModel.addCategory(Playlist);
+		listModel.addItemToCategory(new SourceListItem("Add a Playlist"), Playlist);
 		SourceList sourceList = new SourceList(listModel);
+		sourceList.addSourceListClickListener(new SourceListClickListener() {
+			
+			@Override
+			public void sourceListItemClicked(SourceListItem arg0, Button arg1, int arg2) {
+				if(arg0.getText()=="My Library"){
+					System.out.println("Mettre la bibliotheque dans la JTable");
+				}else if(arg0.getText()=="Add a Playlist"){
+					System.out.println("Faire une Frame/Alert avec textfield pour ajouter");
+				}else{
+					System.out.println("Mettre la playlist dans la JTable");
+				}
+			}
+			
+			@Override
+			public void sourceListCategoryClicked(SourceListCategory arg0, Button arg1,
+					int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		sourceList.setColorScheme(new SourceListDarkColorScheme());
 		
 		sourceList.getComponent().setPreferredSize(new Dimension(200,350));

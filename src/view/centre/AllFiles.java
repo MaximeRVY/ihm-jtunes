@@ -136,9 +136,6 @@ public class AllFiles implements Observer {
 	public void update(Observable o, Object arg) {
 		List<Map<String,Object>> bibliotheque = this.model.getBibliotheque();
 		if(arg==null){
-			// Ajout de toute la bibliotheque
-			/*for(int i=0; i<bibliotheque.size() ; i++)
-				this.modelTable.addRow(new String[] {(String) bibliotheque.get(i).get("title")});*/
 			// Ajout du dernier element de la bibliotheque
 			String title = (String) bibliotheque.get(bibliotheque.size()-1).get("title");
 			String artist = (String) bibliotheque.get(bibliotheque.size()-1).get("artist");

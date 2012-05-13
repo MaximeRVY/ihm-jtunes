@@ -61,7 +61,7 @@ public class LibraryModel extends Observable{
 		
 	}
 	
-	private Map<String,Object> getInformationsMp3(MP3File mp3){
+	public Map<String,Object> getInformationsMp3(MP3File mp3){
 		
 		
 		String title="", artist="", album="", genre="", year="";
