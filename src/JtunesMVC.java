@@ -72,12 +72,13 @@ public class JtunesMVC {
 		PlayController playControllerCenter = new PlayController(playModel, libraryModel);
 		AllFiles allFiles = new AllFiles(panelCentre, libraryModel, libControllerCenter, playControllerCenter);
 		
-		
-		
 		this.principalFrame.getContentPane().add(panelCentre);
 		
 		PlayController playControllerBottom = new PlayController(playModel, libraryModel);
 		Bottom bottom = new Bottom(this.principalFrame, playModel, playControllerBottom);
+		
+		playControllerBottom.addBottomView(bottom);
+		playControllerCenter.addBottomView(bottom);
 		
 		this.principalFrame.setSize(new Dimension(800, 600));
 		

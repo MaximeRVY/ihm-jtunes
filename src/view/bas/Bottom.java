@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -49,6 +51,14 @@ public class Bottom implements Observer {
 		this.panelBottom.setLayout(new BoxLayout(this.panelBottom, BoxLayout.X_AXIS));
 		
 		previous = new JButton("Previous");
+		previous.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("a venir");
+				
+			}
+		});
 		
 		playPause = new JButton("Play / Pause");
 		playPause.addActionListener(new ActionListener() {
@@ -61,15 +71,55 @@ public class Bottom implements Observer {
 		});
 		
 		next = new JButton("Next");
+		next.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				controller.next();
+				
+			}
+		});
 		
 		labelInTime = new JLabel("--:--");
 		
-		sliderTime = new JSlider(0,100,0);
+		sliderTime = new JSlider(0,200,0);
 		sliderTime.setPreferredSize(new Dimension(200,20));
 		sliderTime.setMinimumSize(new Dimension(200,20));
 		sliderTime.setMaximumSize(new Dimension(200,20));
 		sliderTime.setEnabled(false);
-		
+		sliderTime.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				System.out.println(sliderTime.getValue()+" "+ sliderTime.getMaximum());
+				controller.changePosition(sliderTime.getValue());
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		labelEndTime = new JLabel("--:--");
 		
 		JLabel labelVolume = new JLabel("Volume :");
@@ -82,8 +132,7 @@ public class Bottom implements Observer {
 			
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				controller.changeVolume(new Integer(sliderVolume.getValue()).floatValue());
-				
+				controller.changeVolume(new Integer(sliderVolume.getValue()).floatValue() / 100);
 			}
 		});
 		
@@ -109,10 +158,35 @@ public class Bottom implements Observer {
 		this.principalFrame.getContentPane().add(this.panelBottom);	
 	}
 	
+	public float getVolume(){
+		return new Integer(this.sliderVolume.getValue()).floatValue() / 100;
+	}
+	
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
+		int sec;
+		int min;
+		String sep = ":";
 		
+		if((String) arg == "load"){
+			int duration = this.model.getDuration();
+			sec = (duration / 1000) % 60;
+	        min = (duration / 1000) / 60;
+	        if(sec<10)
+	        	sep=":0";       
+			this.labelEndTime.setText(min+sep+sec);
+			this.sliderTime.setEnabled(true);
+			this.sliderTime.setMaximum(duration);
+		}
+		
+		int position = this.model.getPosition();
+		sec = (position / 1000) % 60;
+        min = (position / 1000) / 60;
+        sep = ":";
+        if(sec<10)
+        	sep=":0";       
+		this.labelInTime.setText(min+sep+sec);
+		this.sliderTime.setValue(position);
 	}
 
 }

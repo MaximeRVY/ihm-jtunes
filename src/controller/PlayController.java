@@ -5,10 +5,12 @@ import java.util.Map;
 
 import model.LibraryModel;
 import model.PlayModel;
+import view.bas.Bottom;
 
 public class PlayController {
 	private PlayModel playModel;
 	private LibraryModel libraryModel;
+	private Bottom bottomView;
 	
 	
 	public PlayController(PlayModel playModel, LibraryModel libraryModel) {
@@ -16,11 +18,15 @@ public class PlayController {
 		this.libraryModel = libraryModel;
 	}
 	
+	public void addBottomView(Bottom bottomView){
+		this.bottomView = bottomView;
+	}
+	
 	public void loadAndPlay(Integer id){
-		System.out.println(id);
 		Map<String, Object> file = libraryModel.findById(id);
 		playModel.load(file);
 		playModel.PlayPause();
+		changeVolume(bottomView.getVolume());
 	}
 	
 	public void playPause(){

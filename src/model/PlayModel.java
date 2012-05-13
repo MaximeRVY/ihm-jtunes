@@ -47,6 +47,8 @@ public class PlayModel extends Observable{
 			Equalizer eq = new Equalizer();
 			eq.getBand(0);
 			state = 1;
+			setChanged();
+			notifyObservers("load");
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -79,7 +81,8 @@ public class PlayModel extends Observable{
 
 	public void setVolume(float volume) {
 		this.volume = volume;
-		player.setVolume(volume);
+		if(player!=null)
+			player.setVolume(volume);
 	}
 	
 	public int getPosition(){
@@ -98,6 +101,10 @@ public class PlayModel extends Observable{
 	
 	public void setQueue(List<Map<String, Object>> queue){
 		this.queue = queue;
+	}
+	
+	public int getDuration(){
+		return player.getDuration();
 	}
 	
 	public void next(){

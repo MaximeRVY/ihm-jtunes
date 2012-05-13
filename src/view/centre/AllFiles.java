@@ -69,7 +69,6 @@ public class AllFiles implements Observer {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if(arg0.getClickCount() == 2)
-					//System.out.println(Integer.valueOf((String) (modelTable.getValueAt(table.getSelectedRow(), 6))));
 					playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.getSelectedRow(), 6))));
 			}
 
@@ -120,7 +119,6 @@ public class AllFiles implements Observer {
 			String year = (String) bibliotheque.get(bibliotheque.size()-1).get("year");
 			String duration = (String) bibliotheque.get(bibliotheque.size()-1).get("duration");
 			Integer id = (Integer) bibliotheque.get(bibliotheque.size()-1).get("id");
-			System.out.println(bibliotheque.get(bibliotheque.size()-1).get("pathname"));
 			this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString()});
 		}else{
 			for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)

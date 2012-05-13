@@ -185,6 +185,7 @@ public class LibraryModel extends Observable{
 	public String getDuration(File file) throws UnsupportedAudioFileException, IOException{
 		int sec;
 		int min;
+		String sep = ":";
 		AudioFileFormat fileFormat = AudioSystem.getAudioFileFormat(file);
 	    if (fileFormat instanceof TAudioFileFormat) {
 	        Map<?, ?> properties = ((TAudioFileFormat) fileFormat).properties();
@@ -193,10 +194,12 @@ public class LibraryModel extends Observable{
 	        int mili = (int) (microseconds / 1000);
 	        sec = (mili / 1000) % 60;
 	        min = (mili / 1000) / 60;
+	        if(sec<10)
+	        	sep = ":0";
 	    } else {
 	        throw new UnsupportedAudioFileException();
 	    }
-		return min+":"+sec;
+		return min+sep+sec;
 		
 	}
 
