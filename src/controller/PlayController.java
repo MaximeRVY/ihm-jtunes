@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.List;
 import java.util.Map;
 
 import model.LibraryModel;
@@ -37,4 +38,13 @@ public class PlayController {
 	public void changePosition(int position){
 		playModel.setPosition(position);
 	}
+	
+	public void next(){
+		playModel.next();
+	}
+	
+	public void changeQueueList(List<Map<String, Object>> list){
+		playModel.setQueue(list);
+	}
+	
 }

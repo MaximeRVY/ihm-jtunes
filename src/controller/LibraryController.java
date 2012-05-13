@@ -16,4 +16,5 @@ public class LibraryController {
 	public void importFolder(String absolutePath) {
 		model.saveFolderInModel(absolutePath);		
 	}
+	
 }

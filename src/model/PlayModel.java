@@ -1,6 +1,10 @@
 package model;
 
+import helper.HelpForList;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 
@@ -17,12 +21,21 @@ public class PlayModel extends Observable{
 	private float volume = 1;
 	private int position = 0;
 	
+	private List<Map<String,Object>> queue;
+	
+	Boolean random;
 	public PlayModel() {
 		player = null;
 		currentPlayed = new HashMap<String, Object>();
 		state = 0;
+		queue = new ArrayList<Map<String,Object>>();
+		random = false;
 	}
 	
+	public Map<String, Object> getCurrentPlayed() {
+		return currentPlayed;
+	}
+
 	public void load(Map<String, Object> file){
 		if(state != 0)
 			stop();
@@ -30,7 +43,7 @@ public class PlayModel extends Observable{
 		try{
 			this.currentPlayed = file;
 			player = new LillePlayer((String)file.get("pathname"));
-			player.setVolume(0);
+			player.setVolume(this.volume);
 			Equalizer eq = new Equalizer();
 			eq.getBand(0);
 			state = 1;
@@ -82,8 +95,34 @@ public class PlayModel extends Observable{
 		setChanged();
 		notifyObservers();
 	}
+	
+	public void setQueue(List<Map<String, Object>> queue){
+		this.queue = queue;
+	}
+	
+	public void next(){
+		if(currentPlayed.isEmpty()){
+			if(!random){
+				if(state != 0){
+					Integer id = (Integer) currentPlayed.get("id");
+					Integer i = HelpForList.instance.indexById(this.queue, id);
+					if (i != -1){
+						if( i != (this.queue.size() -1) )
+							i = 0;
+						else
+							i += 1;
+						Map<String, Object> nextPlayed = this.queue.get(i);
+						this.currentPlayed = nextPlayed;
+						this.stop();
+						this.PlayPause();
+					}
+				}
+			}
+		}
+	}
 
-
+	
+	// Thread for lecture
 	class LaunchListenThread extends Thread{
 		private LillePlayer playerInterne;
 		private PlayModel parent;
@@ -124,6 +163,7 @@ public class PlayModel extends Observable{
 			}
 		}
 	}
+
 	
 
 }
