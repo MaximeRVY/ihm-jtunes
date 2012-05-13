@@ -9,6 +9,13 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import model.LibraryModel;
+
+import com.explodingpixels.macwidgets.SourceList;
+import com.explodingpixels.macwidgets.SourceListCategory;
+import com.explodingpixels.macwidgets.SourceListDarkColorScheme;
+import com.explodingpixels.macwidgets.SourceListItem;
+import com.explodingpixels.macwidgets.SourceListModel;
+
 import controller.LibraryController;
 
 public class LeftMenu implements Observer {
@@ -34,6 +41,15 @@ public class LeftMenu implements Observer {
 		
 		// Color
 		this.panelLeftMenu.setBackground(Color.YELLOW);
+		
+		SourceListModel listModel = new SourceListModel();
+		SourceListCategory category = new SourceListCategory("Category");
+		listModel.addCategory(category);
+		listModel.addItemToCategory(new SourceListItem("Item"), category);
+		SourceList sourceList = new SourceList(listModel);
+		sourceList.setColorScheme(new SourceListDarkColorScheme());
+		
+		this.panelLeftMenu.add(sourceList.getComponent());
 		
 		this.model.addObserver(this);
 		
