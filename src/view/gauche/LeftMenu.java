@@ -8,6 +8,8 @@ import java.util.Observer;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import view.CreatePlaylist;
+
 import model.LibraryModel;
 
 import com.explodingpixels.macwidgets.SourceList;
@@ -54,7 +56,10 @@ public class LeftMenu implements Observer {
 				if(arg0.getText()=="My Library"){
 					System.out.println("Mettre la bibliotheque dans la JTable");
 				}else if(arg0.getText()=="Add a Playlist"){
-					System.out.println("Faire une Frame/Alert avec textfield pour ajouter");
+					//System.out.println("Faire une Frame/Alert avec textfield pour ajouter");
+					CreatePlaylist create = new CreatePlaylist();
+					create.startDialog();
+					System.out.println("Créer une playlist avec "+create.getTextField());
 				}else{
 					System.out.println("Mettre la playlist dans la JTable");
 				}

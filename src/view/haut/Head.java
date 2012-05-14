@@ -47,7 +47,7 @@ public class Head implements Observer{
 		this.headPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 		
 		this.searchText.setToolTipText("Search");
-		this.searchText.setMinimumSize(new Dimension(140, 25));
+		this.searchText.setPreferredSize(new Dimension(140, 25));
 		this.searchText.setMinimumSize(new Dimension(140, 25));
 		this.searchText.setMaximumSize(new Dimension(140, 25));
 		// Ajout d'un listener sur searchText
