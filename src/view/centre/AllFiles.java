@@ -73,7 +73,7 @@ public class AllFiles implements Observer {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if(arg0.getClickCount() == 2)
-					playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.getSelectedRow(), 6))));
+					playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6))));
 			}
 
 			@Override
@@ -106,7 +106,7 @@ public class AllFiles implements Observer {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e){
-				playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.getSelectedRow(), 6))));
+				playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6))));
 			}
 		});
 		JScrollPane scrollPane = new JScrollPane(table);
