@@ -72,7 +72,7 @@ public class LeftMenu implements Observer {
 				
 			}
 		});
-		sourceList.setColorScheme(new SourceListDarkColorScheme());
+		//sourceList.setColorScheme(new SourceListDarkColorScheme());
 		
 		sourceList.getComponent().setPreferredSize(new Dimension(200,350));
 		sourceList.getComponent().setMinimumSize(new Dimension(200,350));
