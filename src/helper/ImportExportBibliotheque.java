@@ -2,6 +2,7 @@ package helper;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -96,9 +97,12 @@ public class ImportExportBibliotheque implements Observer{
 		Connection connection = null;
 		try {
 			connection = DriverManager.getConnection("jdbc:sqlite:" + basePath);
-			Statement statement = connection.createStatement();
-			statement.setQueryTimeout(30);
-			
+			//Statement statement = connection.createStatement();
+			//statement.setQueryTimeout(30);
+			PreparedStatement statement = connection.prepareStatement("insert into songs" +
+					"(id, title, artist, album, genre, year, duration , pathname)" +
+					" values" +
+					"(? , ? , ? , ? , ? , ? , ? , ?);");
 			String title = (String) song.get("title");
 			String artist = (String) song.get("artist");
 			String album = (String) song.get("album");
@@ -108,7 +112,19 @@ public class ImportExportBibliotheque implements Observer{
 			Integer id = (Integer) song.get("id");
 			String pathname = (String) song.get("pathname");
 			
-			statement.executeUpdate("insert into songs values("+id+", '"+title+"', '"+artist+"', '"+album+"', '"+genre+"', '"+year+"', '"+duration+"', '"+pathname+"')");
+			statement.setInt(1, id);
+			statement.setString(2,title);
+			statement.setString(3, artist);
+			statement.setString(4, album);
+			statement.setString(5, genre);
+			statement.setString(6, year);
+			statement.setString(7, duration);
+			statement.setString(8, pathname);
+			statement.executeUpdate();
+			statement.close();
+			//System.out.println("insert into songs values("+id+", '"+title+"', '"+artist+"', '"+album+"', '"+genre+"', '"+year+"', '"+duration+"', '"+pathname+"')");
+			
+			//statement.executeUpdate("insert into songs values("+id+", '"+title+"', '"+artist+"', '"+album+"', '"+genre+"', '"+year+"', '"+duration+"', '"+pathname+"')");
 			 
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
