@@ -55,7 +55,7 @@ public class Bottom implements Observer {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("a venir");
+				controller.previous();
 				
 			}
 		});

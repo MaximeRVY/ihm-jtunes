@@ -1,9 +1,9 @@
 package view.centre;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
@@ -13,7 +13,9 @@ import java.util.Observer;
 
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
@@ -32,6 +34,7 @@ public class AllFiles implements Observer {
 	private JPanel allFilesPanel;
 	private JTable table;
 	private DefaultTableModel modelTable;
+	private JPopupMenu popupMenu;
 	
 	public AllFiles(JPanel panelCentre, LibraryModel model, LibraryController libraryController, PlayController playController){
 		this.panelCentre = panelCentre;
@@ -68,12 +71,36 @@ public class AllFiles implements Observer {
 		this.table.getColumnModel().getColumn(6).setMaxWidth(0);
 		// Tri automatique sur la colonne
 		this.table.setAutoCreateRowSorter(true);
+		this.popupMenu = new JPopupMenu();
+		JMenuItem menuItem = new JMenuItem("Remove");
+		menuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("Supprimer");
+				
+			}
+		});
+		this.popupMenu.add(menuItem);
+		menuItem = new JMenuItem("Add to the playlist...");
+		menuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("Add to the playlist...");
+				
+			}
+		});
+		this.popupMenu.add(menuItem);
 		// Ajout du double clic
 		this.table.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(arg0.getClickCount() == 2)
+				if(arg0.getClickCount() == 2){
 					playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6))));
+					// Ajout de la bibliotheque
+					playController.changeQueueList(model.getBibliotheque());
+				}
 			}
 
 			@Override
@@ -96,8 +123,14 @@ public class AllFiles implements Observer {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
+				if(e.getButton() == MouseEvent.BUTTON3 && e.isPopupTrigger()){
+					
+					Point p = new Point(e.getX(), e.getY());
+				 	int selectedRow = table.rowAtPoint(p);
+				 	table.setRowSelectionInterval(selectedRow, selectedRow);
+				 	popupMenu.show(e.getComponent(), e.getX(), e.getY());
+				}
+					
 			}
 		});
 		// Entrer = play
@@ -107,6 +140,8 @@ public class AllFiles implements Observer {
 
 			public void actionPerformed(ActionEvent e){
 				playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6))));
+				// Ajout de la bibliotheque
+				playController.changeQueueList(model.getBibliotheque());
 			}
 		});
 		JScrollPane scrollPane = new JScrollPane(table);
