@@ -168,7 +168,7 @@ public class Bottom implements Observer {
 		int min;
 		String sep = ":";
 		
-		if((String) arg == "load"){
+		if((String) arg == "load" || (String) arg == "change"){
 			int duration = this.model.getDuration();
 			sec = (duration / 1000) % 60;
 	        min = (duration / 1000) / 60;

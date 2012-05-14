@@ -67,7 +67,7 @@ public class InPlay implements Observer{
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		if((String) arg == "load"){
+		if((String) arg == "load" || (String) arg == "change"){
 			modelTable.setValueAt(this.controller.getInformationsMp3().get("title"), 0, 1);
 			modelTable.setValueAt(this.controller.getInformationsMp3().get("artist"), 1, 1);
 		}
