@@ -37,20 +37,22 @@ public class PlayModel extends Observable{
 	}
 
 	public void load(Map<String, Object> file){
-		if(state != 0)
-			stop();
-		
-		try{
-			this.currentPlayed = file;
-			player = new LillePlayer((String)file.get("pathname"));
-			player.setVolume(this.volume);
-			Equalizer eq = new Equalizer();
-			eq.getBand(0);
-			state = 1;
-			setChanged();
-			notifyObservers("load");
-		}catch (Exception e) {
-			e.printStackTrace();
+		if(!file.isEmpty()){
+			if(state != 0)
+				stop();
+			
+			try{
+				this.currentPlayed = file;
+				player = new LillePlayer((String)file.get("pathname"));
+				player.setVolume(this.volume);
+				Equalizer eq = new Equalizer();
+				eq.getBand(0);
+				state = 1;
+				setChanged();
+				notifyObservers("load");
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -62,8 +64,12 @@ public class PlayModel extends Observable{
 			LaunchListenThread llt = new LaunchListenThread(player,this);
 			llt.start();
 			state = 2;
+			setChanged();
+			notifyObservers("play");
 		}else if(state == 2){
 			player.pause();
+			setChanged();
+			notifyObservers("pause");
 		}
 	}
 

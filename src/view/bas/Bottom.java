@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -27,6 +28,7 @@ public class Bottom implements Observer {
 	private PlayController controller;
 	private PlayModel model;
 	private JPanel panelBottom;
+	private JButton stop;
 	private JButton previous;
 	private JButton playPause;
 	private JButton next;
@@ -49,6 +51,16 @@ public class Bottom implements Observer {
 		this.panelBottom.setMaximumSize(new Dimension(800,70));
 		this.panelBottom.setLayout(new BoxLayout(this.panelBottom, BoxLayout.X_AXIS));
 		
+		stop = new JButton("Stop");
+		stop.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				controller.stop();
+				playPause.setText("Play");
+			}
+		});
+		
 		previous = new JButton("Previous");
 		previous.addActionListener(new ActionListener() {
 			
@@ -59,7 +71,7 @@ public class Bottom implements Observer {
 			}
 		});
 		
-		playPause = new JButton("Play / Pause");
+		playPause = new JButton("Play");
 		playPause.addActionListener(new ActionListener() {
 			
 			@Override
@@ -124,9 +136,10 @@ public class Bottom implements Observer {
 		JLabel labelVolume = new JLabel("Volume :");
 		
 		sliderVolume = new JSlider(50,100,100);
-		sliderVolume.setPreferredSize(new Dimension(100,20));
-		sliderVolume.setMinimumSize(new Dimension(100,20));
-		sliderVolume.setMaximumSize(new Dimension(100,20));
+		sliderVolume.setOrientation(SwingConstants.VERTICAL);
+		sliderVolume.setPreferredSize(new Dimension(20,60));
+		sliderVolume.setMinimumSize(new Dimension(20,60));
+		sliderVolume.setMaximumSize(new Dimension(20,60));
 		sliderVolume.addChangeListener(new ChangeListener() {
 			
 			@Override
@@ -136,6 +149,8 @@ public class Bottom implements Observer {
 		});
 		
 		this.panelBottom.add(Box.createRigidArea(new Dimension(20, 0)));
+		this.panelBottom.add(stop);
+		this.panelBottom.add(Box.createRigidArea(new Dimension(10, 0)));
 		this.panelBottom.add(previous);
 		this.panelBottom.add(Box.createRigidArea(new Dimension(10, 0)));
 		this.panelBottom.add(playPause);
@@ -163,29 +178,38 @@ public class Bottom implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		int sec;
-		int min;
-		String sep = ":";
-		
-		if((String) arg == "load" || (String) arg == "change"){
-			int duration = this.model.getDuration();
-			sec = (duration / 1000) % 60;
-	        min = (duration / 1000) / 60;
+		if((String) arg == "play"){
+			this.playPause.setText("Pause");
+		}else if((String) arg == "pause"){
+			if(this.playPause.getText().equals("Pause"))
+				this.playPause.setText("Play");
+			else
+				this.playPause.setText("Pause");
+		}else{
+			int sec;
+			int min;
+			String sep = ":";
+			
+			if((String) arg == "load" || (String) arg == "change"){
+				int duration = this.model.getDuration();
+				sec = (duration / 1000) % 60;
+		        min = (duration / 1000) / 60;
+		        if(sec<10)
+		        	sep=":0";       
+				this.labelEndTime.setText(min+sep+sec);
+				this.sliderTime.setEnabled(true);
+				this.sliderTime.setMaximum(duration);
+			}
+			
+			int position = this.model.getPosition();
+			sec = (position / 1000) % 60;
+	        min = (position / 1000) / 60;
+	        sep = ":";
 	        if(sec<10)
 	        	sep=":0";       
-			this.labelEndTime.setText(min+sep+sec);
-			this.sliderTime.setEnabled(true);
-			this.sliderTime.setMaximum(duration);
+			this.labelInTime.setText(min+sep+sec);
+			this.sliderTime.setValue(position);
 		}
-		
-		int position = this.model.getPosition();
-		sec = (position / 1000) % 60;
-        min = (position / 1000) / 60;
-        sep = ":";
-        if(sec<10)
-        	sep=":0";       
-		this.labelInTime.setText(min+sep+sec);
-		this.sliderTime.setValue(position);
 	}
 
 }
