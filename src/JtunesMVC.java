@@ -84,6 +84,8 @@ public class JtunesMVC {
 		
 		playControllerBottom.addBottomView(bottom);
 		playControllerCenter.addBottomView(bottom);
+		playControllerBottom.addAllFilesView(allFiles);
+		playControllerCenter.addAllFilesView(allFiles);
 		
 		this.principalFrame.setSize(new Dimension(800, 600));
 		

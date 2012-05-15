@@ -2,20 +2,24 @@ package controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import model.LibraryModel;
+import model.PlayModel;
 
 import org.farng.mp3.MP3File;
 import org.farng.mp3.TagException;
 
-import model.LibraryModel;
-import model.PlayModel;
 import view.bas.Bottom;
+import view.centre.AllFiles;
 
 public class PlayController {
 	private PlayModel playModel;
 	private LibraryModel libraryModel;
 	private Bottom bottomView;
+	private AllFiles allFilesView;
 	
 	
 	public PlayController(PlayModel playModel, LibraryModel libraryModel) {
@@ -25,6 +29,10 @@ public class PlayController {
 	
 	public void addBottomView(Bottom bottomView){
 		this.bottomView = bottomView;
+	}
+	
+	public void addAllFilesView(AllFiles allFilesView){
+		this.allFilesView = allFilesView;
 	}
 	
 	public void loadAndPlay(Integer id){
@@ -54,7 +62,7 @@ public class PlayController {
 		playModel.next();
 	}
 	
-	public void changeQueueList(List<Map<String, Object>> list){
+	public void changeInPlayList(List<Map<String, Object>> list){
 		playModel.setQueue(list);
 	}
 	

@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
@@ -99,7 +100,7 @@ public class AllFiles implements Observer {
 				if(arg0.getClickCount() == 2){
 					playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6))));
 					// Ajout de la bibliotheque
-					playController.changeQueueList(model.getBibliotheque());
+					playController.changeInPlayList(getJTable());
 				}
 			}
 
@@ -140,8 +141,9 @@ public class AllFiles implements Observer {
 
 			public void actionPerformed(ActionEvent e){
 				playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6))));
+				
 				// Ajout de la bibliotheque
-				playController.changeQueueList(model.getBibliotheque());
+				playController.changeInPlayList(getJTable());
 			}
 		});
 		JScrollPane scrollPane = new JScrollPane(table);
@@ -165,6 +167,15 @@ public class AllFiles implements Observer {
 			Integer id = (Integer) bibliotheque.get(i).get("id");
 			this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString()});
 		}
+	}
+	
+	public List<Map<String, Object>> getJTable(){
+		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+		Map<String, Object> file;
+		for(int i=0 ; i < modelTable.getRowCount(); i++){
+			
+		}
+		return list;
 	}
 	
 	@Override
