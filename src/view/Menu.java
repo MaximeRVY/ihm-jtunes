@@ -1,10 +1,12 @@
 package view;
 
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -14,10 +16,10 @@ import controller.LibraryController;
 
 public class Menu extends JMenuBar{
 	LibraryController controller;
-	
-	public Menu(LibraryController controller) {
+	JFrame principalFrame;
+	public Menu(LibraryController controller, JFrame frame) {
 		this.controller = controller;
-		
+		this.principalFrame = frame;
 		
 		JMenu menu = new JMenu("File");
 		this.add(menu);
@@ -62,8 +64,10 @@ public class Menu extends JMenuBar{
 		
 		int returnVal = fileChoose.showOpenDialog(new JPanel());
 		if (returnVal == JFileChooser.APPROVE_OPTION){
+			this.principalFrame.getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			File file = fileChoose.getSelectedFile();
 			controller.importFolder(file.getAbsolutePath());
+			this.principalFrame.getContentPane().setCursor(Cursor.getDefaultCursor());
 		}
 	}
 	
@@ -75,8 +79,10 @@ public class Menu extends JMenuBar{
 		int returnVal = fileChoose.showOpenDialog(new JPanel());
 				
 		if(returnVal == JFileChooser.APPROVE_OPTION){
+			this.principalFrame.getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			File file = fileChoose.getSelectedFile();
 			this.controller.importFile(file.getAbsolutePath());
+			this.principalFrame.getContentPane().setCursor(Cursor.getDefaultCursor());
 		}
 	}
 }
