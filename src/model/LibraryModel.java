@@ -12,10 +12,11 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import org.farng.mp3.MP3File;
-import org.farng.mp3.id3.AbstractID3v1;
-import org.farng.mp3.id3.AbstractID3v2;
 import org.tritonus.share.sampled.file.TAudioFileFormat;
+
+import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.Mp3File;
 
 public class LibraryModel extends Observable{
 	// model pour la bibliotheque, les playlist et la current playlist
@@ -47,10 +48,9 @@ public class LibraryModel extends Observable{
 	
 	private Map<String,Object> getInformationForSave(String path) throws Exception{
 		File file = new File(path);
-		MP3File mp3;
 		Map<String,Object> informationsFile = new HashMap<String, Object>();
-		mp3 = new MP3File(file);
-		informationsFile = getInformationsMp3(mp3);
+		
+		informationsFile = getInformationsMp3(file);
 		String duration = getDuration(file);
 		informationsFile.put("duration", duration);
 		informationsFile.put("pathname", path);
@@ -61,33 +61,43 @@ public class LibraryModel extends Observable{
 		
 	}
 	
-	public Map<String,Object> getInformationsMp3(MP3File mp3){
-		
+	public Map<String,Object> getInformationsMp3(File file){
+		Mp3File mp3 = null;
+		try {
+			mp3 = new Mp3File(file.getAbsolutePath());
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} 
 		
 		String title="", artist="", album="", genre="", year="";
 		int duration =0;
 		
-		if(mp3.hasID3v1Tag()){
-			AbstractID3v1 tag = mp3.getID3v1Tag();
+		if(mp3.hasId3v1Tag()){
+			ID3v1 tag = mp3.getId3v1Tag();
 			if(tag != null){
-				try{ title = tag.getSongTitle(); }catch(Exception e){}
-				try{ artist = tag.getLeadArtist(); }catch(Exception e){}
-				try{ album = tag.getAlbumTitle(); }catch(Exception e){}
-				try{ genre = tag.getSongGenre(); }catch(Exception e){}
-				try{ year = tag.getYearReleased(); }catch(Exception e){}
+				try{ title = tag.getTitle(); }catch(Exception e){}
+				try{ artist = tag.getArtist(); }catch(Exception e){}
+				try{ album = tag.getAlbum(); }catch(Exception e){}
+				try{ genre = tag.getGenreDescription(); }catch(Exception e){}
+				try{ year = tag.getYear(); }catch(Exception e){}
 			}
-		}else if(mp3.hasID3v2Tag()){
-			AbstractID3v2 tag = mp3.getID3v2Tag();
+		}else if(mp3.hasId3v2Tag()){
+			
+			ID3v2 tag = mp3.getId3v2Tag();
 			if(tag != null){
-				try { title = tag.getFrame("TT2").toString();}catch(Exception e){}
-				try { artist = tag.getFrame("TP1").toString();}catch(Exception e){}
-				try {album = tag.getFrame("TAL").toString();}catch(Exception e){}
-				try {year = tag.getFrame("TYE").toString();}catch(Exception e){}
-				try { genre = tag.getFrame("TCO").toString();}catch(Exception e){}
+				try{ title = tag.getTitle(); }catch(Exception e){}
+				try{ artist = tag.getArtist(); }catch(Exception e){}
+				try{ album = tag.getAlbum(); }catch(Exception e){}
+				try{ genre = tag.getGenreDescription(); }catch(Exception e){}
+				try{ year = tag.getYear(); }catch(Exception e){}
 			}
 		}
 		if(title.isEmpty()){
-			title = "Sans Titre";
+			String[] all = file.getName().split("-");
+			title = all[all.length-1].split(".")[0];
+			
+			System.out.println(title);
 		}	
 		else if(title.startsWith("??TT2 :")){
 			title = title.split("\\?\\?TT2 :")[1].trim();
@@ -105,8 +115,8 @@ public class LibraryModel extends Observable{
 			album = album.split("\\?\\?TAL :")[1].trim();
 		}
 			
-	   if(genre.isEmpty())
-		   genre = "Genre Inconnu";
+	 //  if(genre.isEmpty())
+		//   genre = "Genre Inconnu";
 	   if(year.isEmpty())
 		   year = null;
 		   
@@ -135,9 +145,6 @@ public class LibraryModel extends Observable{
 				Map<String, Object> fileInfo;
 				try {
 					fileInfo = getInformationForSave(file.getAbsolutePath());
-					if(fileInfo.get("title").equals("Sans Titre")){
-						fileInfo.put("title", "Sans Titre "+count_files);
-					}
 					this.last_id += 1;
 					fileInfo.put("id",this.last_id);
 					this.bibliotheque.add(fileInfo);

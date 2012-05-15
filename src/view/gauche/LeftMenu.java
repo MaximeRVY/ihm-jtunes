@@ -1,6 +1,5 @@
 package view.gauche;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Observable;
 import java.util.Observer;
@@ -8,17 +7,14 @@ import java.util.Observer;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import view.CreatePlaylist;
-
 import model.LibraryModel;
+import view.CreatePlaylist;
 
 import com.explodingpixels.macwidgets.SourceList;
 import com.explodingpixels.macwidgets.SourceListCategory;
 import com.explodingpixels.macwidgets.SourceListClickListener;
-import com.explodingpixels.macwidgets.SourceListDarkColorScheme;
 import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListModel;
-import com.explodingpixels.macwidgets.SourceListClickListener.Button;
 
 import controller.LibraryController;
 
@@ -59,7 +55,7 @@ public class LeftMenu implements Observer {
 					//System.out.println("Faire une Frame/Alert avec textfield pour ajouter");
 					CreatePlaylist create = new CreatePlaylist();
 					create.startDialog();
-					System.out.println("Créer une playlist avec "+create.getTextField());
+					System.out.println("Crï¿½er une playlist avec "+create.getTextField());
 				}else{
 					System.out.println("Mettre la playlist dans la JTable");
 				}
