@@ -26,6 +26,8 @@ public class PlaylistModel extends Observable{
 		playlist.put("id", lastId);
 		playlist.put("songs", new ArrayList<Map<String, Object>>());
 		allPlaylist.add(playlist);
+		setChanged();
+		notifyObservers("new_playlist");
 	}
 	
 	public void addOneSong(String namePlaylist, Map<String, Object> song){
@@ -34,6 +36,11 @@ public class PlaylistModel extends Observable{
 			Map<String, Object> playlist = allPlaylist.get(index);
 			((List<Map<String, Object>>) playlist.get("songs")).add(song);
 		}
+		
+	}
+	
+	public List<Map<String, Object>> GetAllPlaylist(){
+		return allPlaylist;
 		
 	}
 

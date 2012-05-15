@@ -7,8 +7,10 @@ import javax.swing.JPanel;
 
 import model.LibraryModel;
 import model.PlayModel;
+import model.PlaylistModel;
 import controller.LibraryController;
 import controller.PlayController;
+import controller.PlayListController;
 
 public class LeftContainer{
 	private JPanel panelCentre;
@@ -16,16 +18,21 @@ public class LeftContainer{
 	private LibraryModel libraryModel;
 	private PlayModel playModel;
 	private PlayController playController;
+	private PlaylistModel playlistModel;
+	private PlayListController playlistController;
 	private JPanel panelGauche;
 	private InPlay inPlay;
 	private LeftMenu leftMenu;
 	
-	public LeftContainer(JPanel panelCentre, LibraryController libCon, LibraryModel libMod, PlayController playCon, PlayModel playMod) {
+	
+	public LeftContainer(JPanel panelCentre, LibraryController libCon, LibraryModel libMod, PlayController playCon, PlayModel playMod, PlayListController playlistController, PlaylistModel playlistModel) {
 		this.panelCentre = panelCentre;
 		this.libraryController = libCon;
 		this.libraryModel = libMod;
 		this.playController = playCon;
 		this.playModel = playMod;
+		this.playlistController = playlistController;
+		this.playlistModel = playlistModel;
 		createLeftContainer();
 	}
 	
@@ -47,7 +54,7 @@ public class LeftContainer{
 	}
 	
 	private void createMenuPanel(){
-		this.leftMenu = new LeftMenu(this.panelGauche, this.libraryModel, this.libraryController);
+		this.leftMenu = new LeftMenu(this.panelGauche, this.libraryModel, this.libraryController, this.playlistController, this.playlistModel);
 	}
 	
 	public InPlay getInPlay(){

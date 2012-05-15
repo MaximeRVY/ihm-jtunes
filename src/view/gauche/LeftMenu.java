@@ -1,6 +1,8 @@
 package view.gauche;
 
 import java.awt.Dimension;
+import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -8,6 +10,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import model.LibraryModel;
+import model.PlaylistModel;
 import view.CreatePlaylist;
 
 import com.explodingpixels.macwidgets.SourceList;
@@ -17,18 +20,27 @@ import com.explodingpixels.macwidgets.SourceListItem;
 import com.explodingpixels.macwidgets.SourceListModel;
 
 import controller.LibraryController;
+import controller.PlayListController;
 
 public class LeftMenu implements Observer {
 
 	private JPanel panelGauche;
-	private LibraryModel model;
-	private LibraryController controller;
+	private LibraryModel libraryModel;
+	private LibraryController libraryController;
+	private PlayListController playlistController;
 	private JPanel panelLeftMenu;
+	private SourceListModel listModel;
+	private SourceListCategory playlist_source_list;
+	private PlaylistModel playlistModel;
 	
-	public LeftMenu(JPanel panelGauche, LibraryModel model, LibraryController controller){
+	public LeftMenu(JPanel panelGauche, LibraryModel model, LibraryController controller, PlayListController playlistController, PlaylistModel playlistModel){
 		this.panelGauche = panelGauche;
-		this.model = model;
-		this.controller = controller;
+		this.libraryModel = model;
+		this.libraryController = controller;
+		this.playlistController = playlistController;
+		this.playlistModel = playlistModel;
+		
+		this.playlistModel.addObserver(this);
 		createLeftMenu();
 	}
 	
@@ -37,13 +49,13 @@ public class LeftMenu implements Observer {
 		
 		this.panelLeftMenu.setLayout(new BoxLayout(this.panelLeftMenu, BoxLayout.Y_AXIS));
 		
-		SourceListModel listModel = new SourceListModel();
+		this.listModel = new SourceListModel();
 		SourceListCategory Music = new SourceListCategory("Music");
 		listModel.addCategory(Music);
 		listModel.addItemToCategory(new SourceListItem("My Library"), Music);
-		SourceListCategory Playlist = new SourceListCategory("Playlist");
-		listModel.addCategory(Playlist);
-		listModel.addItemToCategory(new SourceListItem("Add a Playlist"), Playlist);
+		playlist_source_list = new SourceListCategory("Playlist");
+		listModel.addCategory(playlist_source_list);
+		listModel.addItemToCategory(new SourceListItem("Add a Playlist"), playlist_source_list);
 		SourceList sourceList = new SourceList(listModel);
 		sourceList.addSourceListClickListener(new SourceListClickListener() {
 			
@@ -52,10 +64,9 @@ public class LeftMenu implements Observer {
 				if(arg0.getText()=="My Library"){
 					System.out.println("Mettre la bibliotheque dans la JTable");
 				}else if(arg0.getText()=="Add a Playlist"){
-					//System.out.println("Faire une Frame/Alert avec textfield pour ajouter");
 					CreatePlaylist create = new CreatePlaylist();
 					create.startDialog();
-					System.out.println("Cr�er une playlist avec "+create.getTextField());
+					createPlaylistName(create.getTextField());
 				}else{
 					System.out.println("Mettre la playlist dans la JTable");
 				}
@@ -76,15 +87,29 @@ public class LeftMenu implements Observer {
 		
 		this.panelLeftMenu.add(sourceList.getComponent());
 		
-		this.model.addObserver(this);
+		this.libraryModel.addObserver(this);
 		
 		this.panelGauche.add(this.panelLeftMenu);
 	}
 	
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
+		String argument = (String) arg1;
+		if(argument != null && argument.equals("new_playlist")){
+			List<Map<String, Object>> playlists = this.playlistModel.GetAllPlaylist();
+			String last_name = (String) playlists.get(playlists.size() - 1).get("name");
+			listModel.removeItemFromCategoryAtIndex(playlist_source_list, playlist_source_list.getItems().size() - 1);
+			listModel.addItemToCategory(new SourceListItem(last_name), playlist_source_list);
+			listModel.addItemToCategory(new SourceListItem("Add a Playlist"), playlist_source_list);			
+		}
 		
+	}
+	
+	public void createPlaylistName(String name){
+		if(name != null && !name.isEmpty()){
+			this.playlistController.CreatePlaylist(name);
+		}
+			
 	}
 
 	

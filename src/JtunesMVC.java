@@ -10,6 +10,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import model.LibraryModel;
 import model.PlayModel;
+import model.PlaylistModel;
 import view.Menu;
 import view.bas.Bottom;
 import view.centre.AllFiles;
@@ -19,6 +20,7 @@ import view.gauche.LeftMenu;
 import view.haut.Head;
 import controller.LibraryController;
 import controller.PlayController;
+import controller.PlayListController;
 
 
 public class JtunesMVC {
@@ -47,6 +49,7 @@ public class JtunesMVC {
 		
 		LibraryModel libraryModel = new LibraryModel();
 		PlayModel playModel = new PlayModel();
+		PlaylistModel playlistModel = new PlaylistModel();
 		
 		ImportExportBibliotheque importBibilio = new ImportExportBibliotheque(libraryModel);
 		importBibilio.importAllSongs();
@@ -68,7 +71,8 @@ public class JtunesMVC {
 		
 		LibraryController libControllerLeft = new LibraryController(libraryModel);
 		PlayController playControllerLeft = new PlayController(playModel, libraryModel);
-		LeftContainer leftContainer = new LeftContainer(panelCentre, libControllerLeft, libraryModel, playControllerLeft, playModel);
+		PlayListController playlistControllerLeft = new PlayListController(playlistModel, libraryModel);
+		LeftContainer leftContainer = new LeftContainer(panelCentre, libControllerLeft, libraryModel, playControllerLeft, playModel, playlistControllerLeft, playlistModel);
 		
 		InPlay inPlay = leftContainer.getInPlay();
 		LeftMenu leftMenu = leftContainer.getLeftContainer();
