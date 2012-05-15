@@ -53,7 +53,7 @@ public class JtunesMVC {
 		libraryModel.addObserver(importBibilio);
 		LibraryController controllerLib = new LibraryController(libraryModel);
 		
-		Menu menu = new Menu(controllerLib);
+		Menu menu = new Menu(controllerLib, this.principalFrame);
 		this.principalFrame.setJMenuBar(menu);
 			
 		
