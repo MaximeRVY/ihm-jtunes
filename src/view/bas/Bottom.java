@@ -124,7 +124,7 @@ public class Bottom implements Observer {
 		
 		JLabel labelVolume = new JLabel("Volume :");
 		
-		sliderVolume = new JSlider(0,100,100);
+		sliderVolume = new JSlider(50,100,100);
 		sliderVolume.setPreferredSize(new Dimension(100,20));
 		sliderVolume.setMinimumSize(new Dimension(100,20));
 		sliderVolume.setMaximumSize(new Dimension(100,20));
