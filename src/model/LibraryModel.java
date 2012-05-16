@@ -157,8 +157,6 @@ public class LibraryModel extends Observable{
 			}
 				
 		}
-		
-		
 	
 	}
 	
@@ -224,6 +222,7 @@ public class LibraryModel extends Observable{
 		return null;
 		
 	}
+	
 
 	public void editJTable(String filter){
 		if(filter==null)

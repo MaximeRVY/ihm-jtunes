@@ -55,6 +55,7 @@ public class LeftMenu implements Observer {
 		listModel.addItemToCategory(new SourceListItem("My Library"), Music);
 		playlist_source_list = new SourceListCategory("Playlist");
 		listModel.addCategory(playlist_source_list);
+		importAllplaylist();
 		listModel.addItemToCategory(new SourceListItem("Add a Playlist"), playlist_source_list);
 		SourceList sourceList = new SourceList(listModel);
 		sourceList.addSourceListClickListener(new SourceListClickListener() {
@@ -92,6 +93,15 @@ public class LeftMenu implements Observer {
 		this.panelGauche.add(this.panelLeftMenu);
 	}
 	
+	private void importAllplaylist() {
+		List<Map<String, Object>> playlists = this.playlistModel.GetAllPlaylist();
+		for(Map<String, Object> playlist : playlists){
+			String name = (String) playlist.get("name");
+			listModel.addItemToCategory(new SourceListItem(name), playlist_source_list);
+		}
+		
+	}
+
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		String argument = (String) arg1;

@@ -44,4 +44,10 @@ public class PlaylistModel extends Observable{
 		
 	}
 
+	public void importAllplaylist(List<Map<String, Object>> allPlaylist2) {
+		this.allPlaylist.addAll(allPlaylist2);
+		this.lastId = allPlaylist2.size();
+		System.out.println(this.lastId);
+	}
+
 }

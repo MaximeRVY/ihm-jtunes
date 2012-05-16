@@ -1,4 +1,5 @@
 import helper.ImportExportBibliotheque;
+import helper.ImportExportPlaylist;
 
 import java.awt.Dimension;
 
@@ -52,8 +53,12 @@ public class JtunesMVC {
 		PlaylistModel playlistModel = new PlaylistModel();
 		
 		ImportExportBibliotheque importBibilio = new ImportExportBibliotheque(libraryModel);
-		importBibilio.importAllSongs();
+		importBibilio.importAllSongs();	
 		libraryModel.addObserver(importBibilio);
+		
+		ImportExportPlaylist importPlaylist = new ImportExportPlaylist(playlistModel, libraryModel);
+		importPlaylist.importAllPlaylist();
+		
 		LibraryController controllerLib = new LibraryController(libraryModel);
 		
 		Menu menu = new Menu(controllerLib, this.principalFrame);
