@@ -1,6 +1,7 @@
 package model;
 
 import helper.HelpForList;
+import helper.ShuffleList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,30 +108,44 @@ public class PlayModel extends Observable{
 	
 	public void setQueue(List<Map<String, Object>> queue){
 		this.queue = queue;
+		if(random)
+			setRandom();
 	}
 	
 	public int getDuration(){
 		return player.getDuration();
 	}
 	
+	public void setRandom(){
+		random = true; 
+		ShuffleList.shuffleList(this.queue);
+	}
+	
+	public void unsetRandom(){
+		if(random){
+			random = false;
+			HelpForList.instance.SortListByOldId(this.queue);
+		}
+		
+		
+	}
+	
 	public void next(){
 		if(!currentPlayed.isEmpty()){
-			if(!random){
-				if(state != 0){
-					Integer id = (Integer) currentPlayed.get("id");
-					Integer i = HelpForList.instance.indexById(this.queue, id);
-					if (i != -1){
-						if( i >= (this.queue.size() -1) )
-							i = 0;
-						else
-							i += 1;
-						Map<String, Object> nextPlayed = this.queue.get(i);
-						this.currentPlayed = nextPlayed;
-						this.stop();
-						setChanged();
-						notifyObservers("change");
-						this.PlayPause();
-					}
+			if(state != 0){
+				Integer id = (Integer) currentPlayed.get("id");
+				Integer i = HelpForList.instance.indexById(this.queue, id);
+				if (i != -1){
+					if( i >= (this.queue.size() -1) )
+						i = 0;
+					else
+						i += 1;
+					Map<String, Object> nextPlayed = this.queue.get(i);
+					this.currentPlayed = nextPlayed;
+					this.stop();
+					setChanged();
+					notifyObservers("change_current_played");
+					this.PlayPause();
 				}
 			}
 		}
@@ -138,22 +153,20 @@ public class PlayModel extends Observable{
 	
 	public void previous(){
 		if(!currentPlayed.isEmpty()){
-			if(!random){
-				if(state != 0){
-					Integer id = (Integer) currentPlayed.get("id");
-					Integer i = HelpForList.instance.indexById(this.queue, id);
-					if (i != -1){
-						if( i >= (this.queue.size() -1) )
-							i = 0;
-						else
-							i -= 1;
-						Map<String, Object> previousPlayed = this.queue.get(i);
-						this.currentPlayed = previousPlayed;
-						setChanged();
-						notifyObservers("change");
-						this.stop();
-						this.PlayPause();
-					}
+			if(state != 0){
+				Integer id = (Integer) currentPlayed.get("id");
+				Integer i = HelpForList.instance.indexById(this.queue, id);
+				if (i != -1){
+					if( i >= (this.queue.size() -1) )
+						i = 0;
+					else
+						i -= 1;
+					Map<String, Object> previousPlayed = this.queue.get(i);
+					this.currentPlayed = previousPlayed;
+					setChanged();
+					notifyObservers("change");
+					this.stop();
+					this.PlayPause();
 				}
 			}
 		}

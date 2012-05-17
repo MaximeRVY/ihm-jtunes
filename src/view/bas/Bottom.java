@@ -190,7 +190,7 @@ public class Bottom implements Observer {
 			int min;
 			String sep = ":";
 			
-			if((String) arg == "load" || (String) arg == "change"){
+			if((String) arg == "load" || (String) arg == "change_current_played"){
 				int duration = this.model.getDuration();
 				sec = (duration / 1000) % 60;
 		        min = (duration / 1000) / 60;

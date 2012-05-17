@@ -69,4 +69,12 @@ public class PlayController {
 		
 		return libraryModel.getInformationsMp3(file);
 	}
+	
+	public void setRandom(){
+		playModel.setRandom();
+	}
+	
+	public void unSetRandom(){
+		playModel.unsetRandom();
+	}
 }

@@ -1,5 +1,7 @@
 package helper;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +32,18 @@ public class HelpForList {
 		}
 		
 		return -1;
+	}
+	
+	public Comparator<Map<String, Object>> comparatorOldId = new Comparator<Map<String, Object>> (){
+	    public int compare(Map<String, Object> m1, Map<String, Object> m2) {
+	        return ((Integer) m1.get("old_index")).compareTo((Integer) m2.get("old_index"));
+	    }
+
+	};
+
+	
+	public void SortListByOldId(List<Map<String, Object>> list){
+		Collections.sort(list, comparatorOldId);
 	}
 
 }

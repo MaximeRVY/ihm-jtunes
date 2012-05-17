@@ -58,6 +58,7 @@ public class LeftMenu implements Observer {
 		importAllplaylist();
 		listModel.addItemToCategory(new SourceListItem("Add a Playlist"), playlist_source_list);
 		SourceList sourceList = new SourceList(listModel);
+		
 		sourceList.addSourceListClickListener(new SourceListClickListener() {
 			
 			@Override
