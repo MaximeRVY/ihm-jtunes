@@ -230,4 +230,10 @@ public class LibraryModel extends Observable{
 		setChanged();
 		notifyObservers(filter);
 	}
+
+	public void sendLibraryToView() {
+		setChanged();
+		notifyObservers("view_library");
+		
+	}
 }

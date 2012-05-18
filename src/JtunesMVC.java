@@ -76,15 +76,15 @@ public class JtunesMVC {
 		
 		LibraryController libControllerLeft = new LibraryController(libraryModel);
 		PlayController playControllerLeft = new PlayController(playModel, libraryModel);
-		PlayListController playlistControllerLeft = new PlayListController(playlistModel, libraryModel);
-		LeftContainer leftContainer = new LeftContainer(panelCentre, libControllerLeft, libraryModel, playControllerLeft, playModel, playlistControllerLeft, playlistModel);
+		PlayListController playlistController = new PlayListController(playlistModel, libraryModel);
+		LeftContainer leftContainer = new LeftContainer(panelCentre, libControllerLeft, libraryModel, playControllerLeft, playModel, playlistController, playlistModel);
 		
 		InPlay inPlay = leftContainer.getInPlay();
 		LeftMenu leftMenu = leftContainer.getLeftContainer();
 		
 		LibraryController libControllerCenter = new LibraryController(libraryModel);
 		PlayController playControllerCenter = new PlayController(playModel, libraryModel);
-		AllFiles allFiles = new AllFiles(panelCentre, libraryModel, libControllerCenter, playControllerCenter);
+		AllFiles allFiles = new AllFiles(panelCentre, libraryModel, libControllerCenter, playControllerCenter, playlistModel, playlistController);
 		
 		this.principalFrame.getContentPane().add(panelCentre);
 		

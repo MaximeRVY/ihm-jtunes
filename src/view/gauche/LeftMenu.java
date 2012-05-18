@@ -64,13 +64,13 @@ public class LeftMenu implements Observer {
 			@Override
 			public void sourceListItemClicked(SourceListItem arg0, Button arg1, int arg2) {
 				if(arg0.getText()=="My Library"){
-					System.out.println("Mettre la bibliotheque dans la JTable");
+					playlistController.changeToPlaylistOrLibrary("library");
 				}else if(arg0.getText()=="Add a Playlist"){
 					CreatePlaylist create = new CreatePlaylist();
 					create.startDialog();
 					createPlaylistName(create.getTextField());
 				}else{
-					System.out.println("Mettre la playlist dans la JTable");
+					playlistController.changeToPlaylistOrLibrary(arg0.getText());
 				}
 			}
 			

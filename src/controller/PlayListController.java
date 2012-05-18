@@ -22,5 +22,13 @@ public class PlayListController {
 		Map<String, Object> song = libraryModel.findById(idSong);
 		playlistModel.addOneSong(namePlaylist, song);
 	}
+	
+	public void changeToPlaylistOrLibrary(String name){
+		if(name.equals("library")){
+			libraryModel.sendLibraryToView();
+		}else{
+			System.out.println("Change playlist");
+		}
+	}
 
 }
