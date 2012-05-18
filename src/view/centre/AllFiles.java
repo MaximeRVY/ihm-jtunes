@@ -364,10 +364,12 @@ public class AllFiles implements Observer {
 			}
 		}else{
 			if(haveSong){
-				if(((String) arg).startsWith("filter:") && ((String) arg).split("filter:").length>1)
-					this.filter = ((String) arg).split("filter:")[1];
-				else
-					this.filter = "";
+				if(((String) arg).startsWith("filter:")){
+					if(((String) arg).split("filter:").length>1)
+						this.filter = ((String) arg).split("filter:")[1];
+					else
+						this.filter = "";
+				}
 				refresh(bibliotheque);
 			}
 		}
