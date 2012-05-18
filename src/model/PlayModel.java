@@ -4,10 +4,13 @@ import helper.HelpForList;
 import helper.ShuffleList;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Random;
 
 import javazoom.jl.decoder.Equalizer;
 import javazoom.jl.decoder.JavaLayerException;
@@ -119,16 +122,19 @@ public class PlayModel extends Observable{
 	
 	public void setRandom(){
 		random = true; 
-		ShuffleList.shuffleList(this.queue);
+		int i = 0;
+		for(Map<String, Object> song : this.queue){
+			song.put("old_index", i);
+			i++;
+		}
+		this.queue = ShuffleList.shuffleList(this.queue);
 	}
 	
 	public void unsetRandom(){
 		if(random){
 			random = false;
-			HelpForList.instance.SortListByOldId(this.queue);
-		}
-		
-		
+			ShuffleList.SortListByOldId(this.queue);
+		}	
 	}
 	
 	public void next(){
