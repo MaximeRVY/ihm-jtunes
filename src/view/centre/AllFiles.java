@@ -74,7 +74,7 @@ public class AllFiles implements Observer {
 		this.allFilesPanel.setLayout(new BoxLayout(this.allFilesPanel, BoxLayout.Y_AXIS));
 		
 		// Model de la table non editable
-		this.modelTable = new DefaultTableModel(new String[] {"Title","Artist","Album","Time","Genre","Year","id","pathname"},0){
+		this.modelTable = new DefaultTableModel(new String[] {"Title","Artist","Album","Time","Genre","Year","NB","id","pathname"},0){
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -87,13 +87,14 @@ public class AllFiles implements Observer {
 		for(int i=0 ; i<this.table.getColumnCount()-1 ; i++)
 			this.table.getColumnModel().getColumn(i).setMinWidth(50);
 		this.table.getColumnModel().getColumn(3).setMaxWidth(100);
-		this.table.getColumnModel().getColumn(5).setMaxWidth(100);
-		this.table.getColumnModel().getColumn(6).setPreferredWidth(0);
-		this.table.getColumnModel().getColumn(6).setMinWidth(0);
-		this.table.getColumnModel().getColumn(6).setMaxWidth(0);
+		this.table.getColumnModel().getColumn(5).setMaxWidth(50);
+		this.table.getColumnModel().getColumn(6).setMaxWidth(50);
 		this.table.getColumnModel().getColumn(7).setPreferredWidth(0);
 		this.table.getColumnModel().getColumn(7).setMinWidth(0);
 		this.table.getColumnModel().getColumn(7).setMaxWidth(0);
+		this.table.getColumnModel().getColumn(8).setPreferredWidth(0);
+		this.table.getColumnModel().getColumn(8).setMinWidth(0);
+		this.table.getColumnModel().getColumn(8).setMaxWidth(0);
 		// Tri automatique sur la colonne
 		this.table.setAutoCreateRowSorter(true);
 		this.popupMenu = new JPopupMenu();
@@ -103,7 +104,7 @@ public class AllFiles implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("Supprimer");
-				model.removeFile((Integer.valueOf((String) modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6))));
+				model.removeFile((Integer.valueOf((String) modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 7))));
 				modelTable.removeRow(table.convertRowIndexToModel(table.getSelectedRow()));
 				
 			}
@@ -178,8 +179,8 @@ public class AllFiles implements Observer {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if(haveSong && arg0.getClickCount() == 2){
-					playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6))));
-					System.out.println((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6)));
+					playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 7))));
+					System.out.println((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 7)));
 					// Ajout de la bibliotheque
 					playController.changeInPlayList(getJTable());
 				}
@@ -224,7 +225,7 @@ public class AllFiles implements Observer {
 
 			public void actionPerformed(ActionEvent e){
 				if(haveSong){
-					playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6))));
+					playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 7))));
 					
 					// Ajout de la bibliotheque
 					playController.changeInPlayList(getJTable());
@@ -253,9 +254,10 @@ public class AllFiles implements Observer {
 				String genre = (String) bibliotheque.get(i).get("genre");
 				String year = (String) bibliotheque.get(i).get("year");
 				String duration = (String) bibliotheque.get(i).get("duration");
+				Integer nb = (Integer) bibliotheque.get(i).get("NB");
 				Integer id = (Integer) bibliotheque.get(i).get("id");
 				String pathname = (String) bibliotheque.get(i).get("pathname");
-				this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString(), pathname});
+				this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, nb.toString(), id.toString(), pathname});
 			}
 		}else{
 			for(int i=0; i < 32; i++){
@@ -271,8 +273,8 @@ public class AllFiles implements Observer {
 		Map<String, Object> file;
 		for(int i=0 ; i < modelTable.getRowCount(); i++){
 			file = new HashMap<String, Object>();
-			file.put("id", Integer.parseInt((String) (modelTable.getValueAt(table.convertRowIndexToModel(i), 6))));
-			file.put("pathname", (String) (modelTable.getValueAt(table.convertRowIndexToModel(i), 7)));
+			file.put("id", Integer.parseInt((String) (modelTable.getValueAt(table.convertRowIndexToModel(i), 7))));
+			file.put("pathname", (String) (modelTable.getValueAt(table.convertRowIndexToModel(i), 8)));
 			list.add(file);
 		}
 		return list;
@@ -294,9 +296,10 @@ public class AllFiles implements Observer {
 			String genre = (String) bibliotheque.get(bibliotheque.size()-1).get("genre");
 			String year = (String) bibliotheque.get(bibliotheque.size()-1).get("year");
 			String duration = (String) bibliotheque.get(bibliotheque.size()-1).get("duration");
+			Integer nb = (Integer) bibliotheque.get(bibliotheque.size()-1).get("nb");
 			Integer id = (Integer) bibliotheque.get(bibliotheque.size()-1).get("id");
 			String pathname = (String) bibliotheque.get(bibliotheque.size()-1).get("pathname");
-			this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString(), pathname});
+			this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, nb.toString(), id.toString(), pathname});
 		}else if(arg.equals("view_library")){
 			for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
 				this.modelTable.removeRow(i);
@@ -316,9 +319,10 @@ public class AllFiles implements Observer {
 					String genre = (String) song.get("genre");
 					String year = (String) song.get("year");
 					String duration = (String) song.get("duration");
+					Integer nb = (Integer) song.get("nb");
 					Integer id = (Integer) song.get("id");
 					String pathname = (String) song.get("pathname");
-					this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString(), pathname});
+					this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, nb.toString(), id.toString(), pathname});
 				}
 			}else{
 				for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
@@ -339,10 +343,11 @@ public class AllFiles implements Observer {
 					String genre = (String) bibliotheque.get(i).get("genre");
 					String year = (String) bibliotheque.get(i).get("year");
 					String duration = (String) bibliotheque.get(i).get("duration");
+					Integer nb = (Integer) bibliotheque.get(i).get("nb");
 					Integer id = (Integer) bibliotheque.get(i).get("id");
 					String pathname = (String) bibliotheque.get(i).get("pathname");
 					if(title.toLowerCase().contains(filter) || artist.toLowerCase().contains(filter) || album.toLowerCase().contains(filter) || genre.toLowerCase().contains(filter))
-						this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString(), pathname});
+						this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, nb.toString(), id.toString(), pathname});
 				}
 			}
 		}

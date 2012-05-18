@@ -71,7 +71,7 @@ public class LibraryModel extends Observable{
 		} 
 		
 		String title="", artist="", album="", genre="", year="";
-		int duration =0;
+		int nb=0;
 		
 		if(mp3.hasId3v1Tag()){
 			ID3v1 tag = mp3.getId3v1Tag();
@@ -127,6 +127,7 @@ public class LibraryModel extends Observable{
 	   retour.put("album", album);
 	   retour.put("genre", genre);
 	   retour.put("year", year);
+	   retour.put("nb", nb);
 		
 		return retour;
 		

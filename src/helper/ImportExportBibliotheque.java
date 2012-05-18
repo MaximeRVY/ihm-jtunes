@@ -59,6 +59,7 @@ public class ImportExportBibliotheque implements Observer{
 		    	song.put("genre", rs.getString("genre"));
 		    	song.put("year", rs.getString("year"));
 		    	song.put("duration", rs.getString("duration"));
+		    	song.put("year", rs.getInt("nb"));
 		    	song.put("pathname", rs.getString("pathname"));
 		    	
 		    	songs.add(song);
@@ -109,6 +110,7 @@ public class ImportExportBibliotheque implements Observer{
 			String genre = (String) song.get("genre");
 			String year = (String) song.get("year");
 			String duration = (String) song.get("duration");
+			Integer nb = (Integer) song.get("nb");
 			Integer id = (Integer) song.get("id");
 			String pathname = (String) song.get("pathname");
 			
@@ -120,6 +122,7 @@ public class ImportExportBibliotheque implements Observer{
 			statement.setString(6, year);
 			statement.setString(7, duration);
 			statement.setString(8, pathname);
+			statement.setInt(9, nb);
 			statement.executeUpdate();
 			statement.close();
 			//System.out.println("insert into songs values("+id+", '"+title+"', '"+artist+"', '"+album+"', '"+genre+"', '"+year+"', '"+duration+"', '"+pathname+"')");
