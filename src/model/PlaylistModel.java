@@ -50,4 +50,19 @@ public class PlaylistModel extends Observable{
 		System.out.println(this.lastId);
 	}
 
+	public void sendPlaylistToView(String name) {
+		setChanged();
+		notifyObservers("view_playlist:"+name);
+		
+	}
+	
+	public List<Map<String, Object>> findByName(String name){
+		for(Map<String, Object> playlist : this.allPlaylist){
+			if( ((String) playlist.get("name")).equals(name) ){
+				return (List<Map<String, Object>>) playlist.get("songs");
+			}
+		}
+		return null;
+	}
+
 }

@@ -156,7 +156,6 @@ public class AllFiles implements Observer {
 			            	String data = line.trim();
 				            String[] result = data.split("file://");
 						    if(result.length == 2){
-						    	System.out.println(result[1].trim());
 						    	libraryController.importFile(result[1].trim());
 						    	
 						    }
@@ -301,6 +300,31 @@ public class AllFiles implements Observer {
 				this.modelTable.removeRow(i);
 			importBibliotheque();
 			
+		}else if(((String) arg).startsWith("view_playlist:")){
+			String namePlaylist = ((String) arg).split("view_playlist:")[1];
+			List<Map<String, Object>> songs = this.playlistModel.findByName(namePlaylist);
+			if(songs != null && songs.size() > 0){
+				haveSong = true;
+				for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
+					this.modelTable.removeRow(i);
+				for(Map<String, Object> song : songs){
+					String title = (String) song.get("title");
+					String artist = (String) song.get("artist");
+					String album = (String) song.get("album");
+					String genre = (String) song.get("genre");
+					String year = (String) song.get("year");
+					String duration = (String) song.get("duration");
+					Integer id = (Integer) song.get("id");
+					String pathname = (String) song.get("pathname");
+					this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString(), pathname});
+				}
+			}else{
+				for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
+					this.modelTable.removeRow(i);
+				for(int i=0; i < 32; i++){
+					this.modelTable.addRow(new String[] {"", "", "", "", "", "", "", ""});
+				}
+			}
 		}else{
 			if(haveSong){
 				for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)

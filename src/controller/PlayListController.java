@@ -27,7 +27,7 @@ public class PlayListController {
 		if(name.equals("library")){
 			libraryModel.sendLibraryToView();
 		}else{
-			System.out.println("Change playlist");
+			playlistModel.sendPlaylistToView(name);
 		}
 	}
 
