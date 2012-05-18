@@ -254,6 +254,6 @@ public class LibraryModel extends Observable{
 			}
 		}
 		setChanged();
-		notifyObservers("refresh");
+		notifyObservers("refresh:"+id);
 	}
 }

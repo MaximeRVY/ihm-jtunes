@@ -146,14 +146,58 @@ public class ImportExportBibliotheque implements Observer{
 				}
 			}		
 	}
+	
+	private void updateNbPlayedById(String id) {
+		
+		Integer nb_lecture = (Integer) model.findById(Integer.parseInt(id)).get("nb");
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Connection connection = null;
+		try {
+			connection = DriverManager.getConnection("jdbc:sqlite:" + basePath);
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); 
+			
+			statement.executeUpdate("UPDATE songs"+
+						" SET nb="+nb_lecture+
+						" WHERE id="+id);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally
+		{
+			try
+			{
+				if(connection != null)
+					connection.close();
+			}
+			catch(SQLException e)
+			{
+				// connection close failed.
+				System.err.println(e);
+			}
+		}	
+	
+		
+	}
+	
 	@Override
 	public void update(Observable o, Object arg) {
 		if(arg == null){
 			List<Map<String,Object>> bibliotheque = this.model.getBibliotheque();
 			exportOneSong(bibliotheque.get(bibliotheque.size()-1));
+		}else if( ((String) arg).startsWith("refresh:") ){
+			String id = ((String) arg).split("refresh:")[1];
+			updateNbPlayedById(id);
 		}
 		
 	}
+
+	
 	
 
 }
