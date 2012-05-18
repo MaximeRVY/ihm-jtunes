@@ -24,7 +24,8 @@ public class PlayModel extends Observable{
 	
 	private List<Map<String,Object>> queue;
 	
-	Boolean random;
+	private Boolean random;
+	
 	public PlayModel() {
 		player = null;
 		currentPlayed = new HashMap<String, Object>();
@@ -170,6 +171,10 @@ public class PlayModel extends Observable{
 				}
 			}
 		}
+	}
+	
+	public boolean getRandom(){
+		return random;
 	}
 
 	

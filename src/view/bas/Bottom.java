@@ -1,5 +1,6 @@
 package view.bas;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +37,7 @@ public class Bottom implements Observer {
 	private JSlider sliderTime;
 	private JLabel labelEndTime;
 	private JSlider sliderVolume;
+	private JButton random;
 	
 	public Bottom(JFrame principalFrame, PlayModel playModel, PlayController playController){
 		this.principalFrame = principalFrame;
@@ -148,6 +150,23 @@ public class Bottom implements Observer {
 			}
 		});
 		
+		random = new JButton("Random");
+		random.setBackground(Color.LIGHT_GRAY);
+		random.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(model.getRandom()){
+					random.setBackground(Color.LIGHT_GRAY);
+					controller.unSetRandom();
+				}else{
+					controller.setRandom();
+					random.setBackground(Color.GREEN);
+				}
+				
+			}
+		});
+		
 		this.panelBottom.add(Box.createRigidArea(new Dimension(20, 0)));
 		this.panelBottom.add(stop);
 		this.panelBottom.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -166,6 +185,8 @@ public class Bottom implements Observer {
 		this.panelBottom.add(labelVolume);
 		this.panelBottom.add(Box.createRigidArea(new Dimension(10, 0)));
 		this.panelBottom.add(sliderVolume);
+		this.panelBottom.add(Box.createRigidArea(new Dimension(20, 0)));
+		this.panelBottom.add(random);
 		
 		this.model.addObserver(this);
 		
