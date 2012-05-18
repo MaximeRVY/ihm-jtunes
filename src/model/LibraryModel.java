@@ -65,7 +65,7 @@ public class LibraryModel extends Observable{
 	public Map<String,Object> getInformationsMp3(File file){
 		Mp3File mp3 = null;
 		try {
-			mp3 = new Mp3File(file.getAbsolutePath());
+			mp3 = new Mp3File(file.getCanonicalPath());
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -146,7 +146,7 @@ public class LibraryModel extends Observable{
 			if(isMp3(file)){
 				Map<String, Object> fileInfo;
 				try {
-					fileInfo = getInformationForSave(file.getAbsolutePath());
+					fileInfo = getInformationForSave(file.getCanonicalPath());
 					this.last_id += 1;
 					fileInfo.put("id",this.last_id);
 					this.bibliotheque.add(fileInfo);

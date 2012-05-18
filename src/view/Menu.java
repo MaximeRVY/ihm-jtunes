@@ -4,6 +4,7 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -66,7 +67,12 @@ public class Menu extends JMenuBar{
 		if (returnVal == JFileChooser.APPROVE_OPTION){
 			this.principalFrame.getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			File file = fileChoose.getSelectedFile();
-			controller.importFolder(file.getAbsolutePath());
+			try {
+				controller.importFolder(file.getCanonicalPath());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			this.principalFrame.getContentPane().setCursor(Cursor.getDefaultCursor());
 		}
 	}
@@ -81,7 +87,12 @@ public class Menu extends JMenuBar{
 		if(returnVal == JFileChooser.APPROVE_OPTION){
 			this.principalFrame.getContentPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			File file = fileChoose.getSelectedFile();
-			this.controller.importFile(file.getAbsolutePath());
+			try {
+				this.controller.importFile(file.getCanonicalPath());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			this.principalFrame.getContentPane().setCursor(Cursor.getDefaultCursor());
 		}
 	}
