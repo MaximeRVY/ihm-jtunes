@@ -230,7 +230,7 @@ public class LibraryModel extends Observable{
 		if(filter==null)
 			filter="";
 		setChanged();
-		notifyObservers(filter);
+		notifyObservers("filter:"+filter);
 	}
 
 	public void sendLibraryToView() {
@@ -249,9 +249,11 @@ public class LibraryModel extends Observable{
 			Map<String, Object> file = it.next();
 			if(file.get("id").equals(id)){
 				int nb = (Integer) file.get("nb");
-				file.put("nb", nb++);
+				file.put("nb", nb+1);
 				it.set(file);
 			}
 		}
+		setChanged();
+		notifyObservers("refresh");
 	}
 }

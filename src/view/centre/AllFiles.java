@@ -52,6 +52,7 @@ public class AllFiles implements Observer {
 	private PlayListController playlistController;
 	private PlaylistModel playlistModel;
 	private Boolean haveSong;
+	private String filter = "";
 	
 	public AllFiles(JPanel panelCentre, LibraryModel model, LibraryController libraryController, PlayController playController, PlaylistModel playlistModel, PlayListController playlistControllerCenter){
 		this.panelCentre = panelCentre;
@@ -248,16 +249,7 @@ public class AllFiles implements Observer {
 		if(sizeBibliotheque > 0){
 			haveSong = true;
 			for(int i=0; i< sizeBibliotheque; i++){
-				String title = (String) bibliotheque.get(i).get("title");
-				String artist = (String) bibliotheque.get(i).get("artist");
-				String album = (String) bibliotheque.get(i).get("album");
-				String genre = (String) bibliotheque.get(i).get("genre");
-				String year = (String) bibliotheque.get(i).get("year");
-				String duration = (String) bibliotheque.get(i).get("duration");
-				Integer nb = (Integer) bibliotheque.get(i).get("nb");
-				Integer id = (Integer) bibliotheque.get(i).get("id");
-				String pathname = (String) bibliotheque.get(i).get("pathname");
-				this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, nb.toString(), id.toString(), pathname});
+				addRowJTable(bibliotheque, i);
 			}
 		}else{
 			for(int i=0; i < 32; i++){
@@ -280,6 +272,28 @@ public class AllFiles implements Observer {
 		return list;
 	}
 	
+	public void addRowJTable(List<Map<String,Object>> bibliotheque, int i){
+		String title = (String) bibliotheque.get(i).get("title");
+		String artist = (String) bibliotheque.get(i).get("artist");
+		String album = (String) bibliotheque.get(i).get("album");
+		String genre = (String) bibliotheque.get(i).get("genre");
+		String year = (String) bibliotheque.get(i).get("year");
+		String duration = (String) bibliotheque.get(i).get("duration");
+		Integer nb = (Integer) bibliotheque.get(i).get("nb");
+		Integer id = (Integer) bibliotheque.get(i).get("id");
+		String pathname = (String) bibliotheque.get(i).get("pathname");
+		if(title.toLowerCase().contains(filter) || artist.toLowerCase().contains(filter) || album.toLowerCase().contains(filter) || genre.toLowerCase().contains(filter))
+			this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, nb.toString(), id.toString(), pathname});
+	}
+	
+	public void refresh(List<Map<String,Object>> bibliotheque){
+		for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
+			this.modelTable.removeRow(i);
+		for(int i=0; i<bibliotheque.size() ; i++){
+			addRowJTable(bibliotheque, i);
+		}
+	}
+	
 	@Override
 	public void update(Observable o, Object arg) {
 		List<Map<String,Object>> bibliotheque = this.model.getBibliotheque();
@@ -290,16 +304,7 @@ public class AllFiles implements Observer {
 				haveSong = true;
 			}
 			// Ajout du dernier element de la bibliotheque
-			String title = (String) bibliotheque.get(bibliotheque.size()-1).get("title");
-			String artist = (String) bibliotheque.get(bibliotheque.size()-1).get("artist");
-			String album = (String) bibliotheque.get(bibliotheque.size()-1).get("album");
-			String genre = (String) bibliotheque.get(bibliotheque.size()-1).get("genre");
-			String year = (String) bibliotheque.get(bibliotheque.size()-1).get("year");
-			String duration = (String) bibliotheque.get(bibliotheque.size()-1).get("duration");
-			Integer nb = (Integer) bibliotheque.get(bibliotheque.size()-1).get("nb");
-			Integer id = (Integer) bibliotheque.get(bibliotheque.size()-1).get("id");
-			String pathname = (String) bibliotheque.get(bibliotheque.size()-1).get("pathname");
-			this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, nb.toString(), id.toString(), pathname});
+			addRowJTable(bibliotheque, bibliotheque.size()-1);
 		}else if(arg.equals("view_library")){
 			for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
 				this.modelTable.removeRow(i);
@@ -328,27 +333,16 @@ public class AllFiles implements Observer {
 				for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
 					this.modelTable.removeRow(i);
 				for(int i=0; i < 32; i++){
-					this.modelTable.addRow(new String[] {"", "", "", "", "", "", "", ""});
+					this.modelTable.addRow(new String[] {"", "", "", "", "", "", "", "", ""});
 				}
 			}
 		}else{
 			if(haveSong){
-				for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
-					this.modelTable.removeRow(i);
-				String filter = ((String) arg).toLowerCase();
-				for(int i=0; i<bibliotheque.size() ; i++){
-					String title = (String) bibliotheque.get(i).get("title");
-					String artist = (String) bibliotheque.get(i).get("artist");
-					String album = (String) bibliotheque.get(i).get("album");
-					String genre = (String) bibliotheque.get(i).get("genre");
-					String year = (String) bibliotheque.get(i).get("year");
-					String duration = (String) bibliotheque.get(i).get("duration");
-					Integer nb = (Integer) bibliotheque.get(i).get("nb");
-					Integer id = (Integer) bibliotheque.get(i).get("id");
-					String pathname = (String) bibliotheque.get(i).get("pathname");
-					if(title.toLowerCase().contains(filter) || artist.toLowerCase().contains(filter) || album.toLowerCase().contains(filter) || genre.toLowerCase().contains(filter))
-						this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, nb.toString(), id.toString(), pathname});
-				}
+				if(((String) arg).startsWith("filter:") && ((String) arg).split("filter:").length>1)
+					this.filter = ((String) arg).split("filter:")[1];
+				else
+					this.filter = "";
+				refresh(bibliotheque);
 			}
 		}
 	}
