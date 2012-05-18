@@ -184,6 +184,39 @@ public class ImportExportBibliotheque implements Observer{
 	
 		
 	}
+	private void removeSong(String id) {
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Connection connection = null;
+		try {
+			connection = DriverManager.getConnection("jdbc:sqlite:" + basePath);
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); 
+			
+			statement.executeUpdate("DELETE songs"+
+						" WHERE id="+id);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally
+		{
+			try
+			{
+				if(connection != null)
+					connection.close();
+			}
+			catch(SQLException e)
+			{
+				// connection close failed.
+				System.err.println(e);
+			}
+		}
+		
+	}
 	
 	@Override
 	public void update(Observable o, Object arg) {
@@ -193,11 +226,12 @@ public class ImportExportBibliotheque implements Observer{
 		}else if( ((String) arg).startsWith("refresh:") ){
 			String id = ((String) arg).split("refresh:")[1];
 			updateNbPlayedById(id);
+		}else if( ((String) arg).startsWith("remove:") ){
+			String id = ((String) arg).split("remove:")[1];
+			removeSong(id);
 		}
-		
-	}
-
-	
-	
+	}	
 
 }
+
+	

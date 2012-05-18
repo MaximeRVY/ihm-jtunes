@@ -63,9 +63,6 @@ public class ImportExportPlaylist implements Observer{
 			} catch (Exception e) {
 				//e.printStackTrace();
 			}
-			//statement.executeUpdate("insert into playlists values (1, 'super playlist')");
-			//statement.executeUpdate("insert into playlists values (2, 'playlist')");
-			//statement.executeUpdate("insert into playlist_song values (2,1)");
 			ResultSet rs = statement.executeQuery("select * from playlists");
 			List<Map<String, Object>> allPlaylist = new ArrayList<Map<String,Object>>();
 			
@@ -82,7 +79,7 @@ public class ImportExportPlaylist implements Observer{
 		    }
 			
 			ResultSet rs2 = statement.executeQuery("select * from playlists, playlist_song where " +
-					"playlists.id = playlist_song.id_song");
+					"playlists.id = playlist_song.id_playlist");
 					while(rs2.next()){
 						String name = rs2.getString("name");
 						Integer index= HelpForList.instance.indexByName(allPlaylist, name);
@@ -124,6 +121,31 @@ public class ImportExportPlaylist implements Observer{
 		}
 		
 	}
+	
+	private void AddToPlaylist(Integer idPlaylist, Integer lastIdAdded) {
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Connection connection = null;
+		try {
+			connection = DriverManager.getConnection("jdbc:sqlite:" + basePath);
+			PreparedStatement statement = connection.prepareStatement("insert into playlist_song (id_playlist, id_song)" +
+					"values " +
+					"(?, ?)");
+			statement.setInt(1, idPlaylist);
+			statement.setInt(2, lastIdAdded);
+			statement.executeUpdate();
+			statement.close();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
@@ -133,9 +155,18 @@ public class ImportExportPlaylist implements Observer{
 			String name = (String) playlists.get(playlists.size() - 1).get("name");
 			Integer id = (Integer) playlists.get(playlists.size() - 1).get("id");
 			save_playlist(id, name);
+		}else if( argument != null && argument.startsWith("new_music_into_playlist:")){
+			String namePlaylist = argument.split("new_music_into_playlist:")[1];
+			Map<String, Object> playlist = model.findByName(namePlaylist);
+			Integer idPlaylist = (Integer) playlist.get("id");
+			List<Map<String, Object>> songs = (List<Map<String, Object>>) playlist.get("songs");
+			Integer lastIdAdded = (Integer) songs.get(songs.size() - 1).get("id");
+			AddToPlaylist(idPlaylist, lastIdAdded);
 		}
 		
 	}
+
+	
 
 	
 

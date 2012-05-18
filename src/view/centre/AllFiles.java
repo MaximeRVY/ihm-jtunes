@@ -4,11 +4,6 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -25,6 +20,7 @@ import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.DropMode;
 import javax.swing.JComponent;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -35,10 +31,11 @@ import javax.swing.TransferHandler;
 import javax.swing.event.MouseInputListener;
 import javax.swing.table.DefaultTableModel;
 
-import transferable.DragTableListener;
+import com.explodingpixels.macwidgets.SourceListItem;
 
 import model.LibraryModel;
 import model.PlaylistModel;
+import transferable.DragTableListener;
 import controller.LibraryController;
 import controller.PlayController;
 import controller.PlayListController;
@@ -102,29 +99,9 @@ public class AllFiles implements Observer {
 		this.table.getColumnModel().getColumn(8).setMaxWidth(0);
 		// Tri automatique sur la colonne
 		this.table.setAutoCreateRowSorter(true);
-		this.popupMenu = new JPopupMenu();
-		JMenuItem menuItem = new JMenuItem("Remove");
-		menuItem.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("Supprimer");
-				model.removeFile((Integer.valueOf((String) modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 7))));
-				modelTable.removeRow(table.convertRowIndexToModel(table.getSelectedRow()));
-				
-			}
-		});
-		this.popupMenu.add(menuItem);
-		menuItem = new JMenuItem("Add to the playlist...");
-		menuItem.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("Add to the playlist...");
-				
-			}
-		});
-		this.popupMenu.add(menuItem);
+		
+		changePopUpMenu();		
+		
 		this.table.setDropMode(DropMode.INSERT_ROWS);
 		
 		this.table.setTransferHandler(new TransferHandler() {
@@ -205,8 +182,7 @@ public class AllFiles implements Observer {
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(haveSong && e.getButton() == MouseEvent.BUTTON3 && e.isPopupTrigger()){
-					
+				if(haveSong && e.getButton() == MouseEvent.BUTTON3){
 					Point p = new Point(e.getX(), e.getY());
 				 	int selectedRow = table.rowAtPoint(p);
 				 	table.setRowSelectionInterval(selectedRow, selectedRow);
@@ -269,6 +245,40 @@ public class AllFiles implements Observer {
 		importBibliotheque();
 	}
 	
+	public void changePopUpMenu(){
+		this.popupMenu = new JPopupMenu();
+		JMenuItem menuItem = new JMenuItem("Remove");
+		menuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("Supprimer");
+				model.removeFile((Integer.valueOf((String) modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 7))));
+				modelTable.removeRow(table.convertRowIndexToModel(table.getSelectedRow()));
+				
+			}
+		});
+		this.popupMenu.add(menuItem);
+		
+		List<Map<String, Object>> playlists = playlistModel.GetAllPlaylist();
+		if(playlists.size() > 0){
+			JMenu sousmenuItem = new JMenu("Add to the playlist");
+			for(Map<String, Object> playlist : playlists){
+				final String name = (String) playlist.get("name");
+				menuItem = new JMenuItem(name);
+				menuItem.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						Integer id = Integer.parseInt(((String) modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 7)));
+						playlistController.addOneSongToPlaylist(name, id);
+					}
+				});
+				sousmenuItem.add(menuItem);
+			}
+			this.popupMenu.add(sousmenuItem);
+		}
+	}
 	public void importBibliotheque(){
 		List<Map<String,Object>> bibliotheque = this.model.getBibliotheque();
 		Integer sizeBibliotheque = bibliotheque.size();
@@ -338,7 +348,7 @@ public class AllFiles implements Observer {
 			
 		}else if(((String) arg).startsWith("view_playlist:")){
 			String namePlaylist = ((String) arg).split("view_playlist:")[1];
-			List<Map<String, Object>> songs = this.playlistModel.findByName(namePlaylist);
+			List<Map<String, Object>> songs = this.playlistModel.findSongsByName(namePlaylist);
 			if(songs != null && songs.size() > 0){
 				haveSong = true;
 				for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
@@ -362,14 +372,14 @@ public class AllFiles implements Observer {
 					this.modelTable.addRow(new String[] {"", "", "", "", "", "", "", "", ""});
 				}
 			}
+		}else if(arg.equals("new_playlist")){
+			changePopUpMenu();			
 		}else{
 			if(haveSong){
-				if(((String) arg).startsWith("filter:")){
-					if(((String) arg).split("filter:").length>1)
-						this.filter = ((String) arg).split("filter:")[1];
-					else
-						this.filter = "";
-				}
+				if(((String) arg).startsWith("filter:") && ((String) arg).split("filter:").length>1)
+					this.filter = ((String) arg).split("filter:")[1];
+				else
+					this.filter = "";
 				refresh(bibliotheque);
 			}
 		}

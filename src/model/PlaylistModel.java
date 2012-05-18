@@ -36,7 +36,8 @@ public class PlaylistModel extends Observable{
 			Map<String, Object> playlist = allPlaylist.get(index);
 			((List<Map<String, Object>>) playlist.get("songs")).add(song);
 		}
-		
+		setChanged();
+		notifyObservers("new_music_into_playlist:"+namePlaylist);
 	}
 	
 	public List<Map<String, Object>> GetAllPlaylist(){
@@ -56,10 +57,18 @@ public class PlaylistModel extends Observable{
 		
 	}
 	
-	public List<Map<String, Object>> findByName(String name){
+	public List<Map<String, Object>> findSongsByName(String name){
 		for(Map<String, Object> playlist : this.allPlaylist){
 			if( ((String) playlist.get("name")).equals(name) ){
 				return (List<Map<String, Object>>) playlist.get("songs");
+			}
+		}
+		return null;
+	}
+	public Map<String, Object> findByName(String name){
+		for(Map<String, Object> playlist : this.allPlaylist){
+			if( ((String) playlist.get("name")).equals(name) ){
+				return playlist;
 			}
 		}
 		return null;
