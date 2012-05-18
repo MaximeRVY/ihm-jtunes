@@ -302,7 +302,7 @@ public class AllFiles implements Observer {
 			importBibliotheque();
 			
 		}else{
-			if(!haveSong){
+			if(haveSong){
 				for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
 					this.modelTable.removeRow(i);
 				String filter = ((String) arg).toLowerCase();

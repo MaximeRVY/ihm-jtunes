@@ -115,10 +115,10 @@ public class LibraryModel extends Observable{
 			album = album.split("\\?\\?TAL :")[1].trim();
 		}
 			
-	 //  if(genre.isEmpty())
-		//   genre = "Genre Inconnu";
+	   if(genre.isEmpty())
+		   genre = "Unknow";
 	   if(year.isEmpty())
-		   year = null;
+		   year = "";
 		   
 	   Map<String,Object> retour = new HashMap<String, Object>();
 	   
