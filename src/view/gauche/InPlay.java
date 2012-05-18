@@ -53,6 +53,7 @@ public class InPlay implements Observer{
 		JScrollPane scrollPane = new JScrollPane(tableInPlay);
 		modelTable.addRow(new String[] {"Title",""});
 		modelTable.addRow(new String[] {"Artist",""});
+		modelTable.addRow(new String[] {"Album",""});
 		
 		this.panelLect.add(scrollPane);
 		
@@ -68,6 +69,7 @@ public class InPlay implements Observer{
 		if((String) arg == "load" || (String) arg == "change"){
 			modelTable.setValueAt(this.controller.getInformationsMp3().get("title"), 0, 1);
 			modelTable.setValueAt(this.controller.getInformationsMp3().get("artist"), 1, 1);
+			modelTable.setValueAt(this.controller.getInformationsMp3().get("album"), 2, 1);
 		}
 	}
 
