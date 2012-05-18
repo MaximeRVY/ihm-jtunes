@@ -2,10 +2,13 @@ package view.centre;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,12 +18,15 @@ import java.util.Observer;
 
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
+import javax.swing.DropMode;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import javax.swing.TransferHandler;
+import javax.swing.TransferHandler.TransferSupport;
 import javax.swing.table.DefaultTableModel;
 
 import model.LibraryModel;
@@ -97,6 +103,54 @@ public class AllFiles implements Observer {
 			}
 		});
 		this.popupMenu.add(menuItem);
+		this.table.setDropMode(DropMode.INSERT_ROWS);
+		
+		this.table.setTransferHandler(new TransferHandler() {
+			public boolean canImport(TransferSupport support) {
+		        if (!support.isDrop()) {
+		          return false;
+		        }
+
+		        // we only import Strings
+		        if (!support.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+		          return false;
+		        }
+
+		        return true;
+		      }
+
+		      public boolean importData(TransferSupport support) {
+		        // if we can't handle the import, say so
+		        if (!canImport(support)) {
+		          return false;
+		        }
+
+		        // fetch the drop location
+		        JTable.DropLocation dl = (JTable.DropLocation) support
+		            .getDropLocation();
+
+		        int row = dl.getRow();
+
+		        // fetch the data and bail if this fails
+		        String data;
+		        try {
+		          data = (String) support.getTransferable().getTransferData(
+		              DataFlavor.stringFlavor);
+		        } catch (UnsupportedFlavorException e) {
+		          return false;
+		        } catch (IOException e) {
+		          return false;
+		        }
+		        
+		       
+		        String[] result = data.split("file://");
+		        if(result.length == 2)
+		        	libraryController.importFile(result[1].trim());
+				return false;
+
+		        
+		      } 
+		});
 		// Ajout du double clic
 		this.table.addMouseListener(new MouseListener() {
 			@Override
@@ -139,6 +193,8 @@ public class AllFiles implements Observer {
 					
 			}
 		});
+		
+		
 		// Entrer = play
 		this.table.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "enter-play");
 		this.table.getActionMap().put("enter-play", new AbstractAction(){
