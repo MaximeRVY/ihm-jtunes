@@ -3,12 +3,15 @@ package view.centre;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +22,7 @@ import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.DropMode;
+import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -30,8 +34,10 @@ import javax.swing.TransferHandler.TransferSupport;
 import javax.swing.table.DefaultTableModel;
 
 import model.LibraryModel;
+import model.PlaylistModel;
 import controller.LibraryController;
 import controller.PlayController;
+import controller.PlayListController;
 
 public class AllFiles implements Observer {
 
@@ -43,13 +49,21 @@ public class AllFiles implements Observer {
 	private JTable table;
 	private DefaultTableModel modelTable;
 	private JPopupMenu popupMenu;
+	private PlayListController playlistController;
+	private PlaylistModel playlistModel;
+	private Boolean haveSong;
 	
-	public AllFiles(JPanel panelCentre, LibraryModel model, LibraryController libraryController, PlayController playController){
+	public AllFiles(JPanel panelCentre, LibraryModel model, LibraryController libraryController, PlayController playController, PlaylistModel playlistModel, PlayListController playlistControllerCenter){
 		this.panelCentre = panelCentre;
 		this.model = model;
 		this.libraryController = libraryController;
 		this.playController = playController;
+		this.playlistModel = playlistModel;
+		this.playlistController = playlistControllerCenter;
+		this.haveSong = false;
 		createAllFiles();
+		
+		this.playlistModel.addObserver(this);
 	}
 	
 	private void createAllFiles(){
@@ -106,56 +120,63 @@ public class AllFiles implements Observer {
 		this.table.setDropMode(DropMode.INSERT_ROWS);
 		
 		this.table.setTransferHandler(new TransferHandler() {
-			public boolean canImport(TransferSupport support) {
-		        if (!support.isDrop()) {
-		          return false;
-		        }
-
-		        // we only import Strings
-		        if (!support.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-		          return false;
-		        }
-
-		        return true;
+			public boolean canImport(JComponent dest, DataFlavor[] flavors) {
+		         return true;
 		      }
 
-		      public boolean importData(TransferSupport support) {
-		        // if we can't handle the import, say so
-		        if (!canImport(support)) {
-		          return false;
-		        }
+		      public boolean importData(JComponent src, Transferable transferable) {
+		    	  DataFlavor[] flavors = transferable.getTransferDataFlavors();
+		    	  DataFlavor listFlavor = null;
+		    	  DataFlavor objectFlavor = null;
+		    	  DataFlavor readerFlavor = null;
+		    	  int lastFlavor = flavors.length - 1;
 
-		        // fetch the drop location
-		        JTable.DropLocation dl = (JTable.DropLocation) support
-		            .getDropLocation();
-
-		        int row = dl.getRow();
-
-		        // fetch the data and bail if this fails
-		        String data;
-		        try {
-		          data = (String) support.getTransferable().getTransferData(
-		              DataFlavor.stringFlavor);
-		        } catch (UnsupportedFlavorException e) {
-		          return false;
-		        } catch (IOException e) {
-		          return false;
-		        }
-		        
-		       
-		        String[] result = data.split("file://");
-		        if(result.length == 2)
-		        	libraryController.importFile(result[1].trim());
-				return false;
-
-		        
+		    	  for (int f = 0; f <= lastFlavor; f++) {
+		    	      if (flavors[f].isFlavorJavaFileListType()) {
+		    	        listFlavor = flavors[f];
+		    	      }
+		    	      if (flavors[f].isFlavorSerializedObjectType()) {
+		    	        objectFlavor = flavors[f];
+		    	      }
+		    	      if (flavors[f].isRepresentationClassReader()) {
+		    	        readerFlavor = flavors[f];
+		    	      }
+		    	    }
+		    	  
+		    	try {
+		    		  DataFlavor bestTextFlavor = DataFlavor
+			    	          .selectBestTextFlavor(flavors);
+			    	      BufferedReader br = null;
+			    	      String line = null;
+			    	  if (bestTextFlavor != null){
+			        	Reader r = bestTextFlavor.getReaderForText(transferable);
+			            br = new BufferedReader(r);
+			            line = br.readLine();
+			            while (line != null) {
+			            	String data = line.trim();
+				            String[] result = data.split("file://");
+						    if(result.length == 2){
+						    	System.out.println(result[1].trim());
+						    	libraryController.importFile(result[1].trim());
+						    	
+						    }
+						       
+				              line = br.readLine();
+			            }
+			            br.close();
+			          }
+				} catch (Exception e) {
+					// TODO: handle exception
+					return false;
+				}
+				return true;     
 		      } 
 		});
 		// Ajout du double clic
 		this.table.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(arg0.getClickCount() == 2){
+				if(haveSong && arg0.getClickCount() == 2){
 					playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6))));
 					System.out.println((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6)));
 					// Ajout de la bibliotheque
@@ -183,7 +204,7 @@ public class AllFiles implements Observer {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(e.getButton() == MouseEvent.BUTTON3 && e.isPopupTrigger()){
+				if(haveSong && e.getButton() == MouseEvent.BUTTON3 && e.isPopupTrigger()){
 					
 					Point p = new Point(e.getX(), e.getY());
 				 	int selectedRow = table.rowAtPoint(p);
@@ -201,10 +222,13 @@ public class AllFiles implements Observer {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e){
-				playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6))));
+				if(haveSong){
+					playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6))));
+					
+					// Ajout de la bibliotheque
+					playController.changeInPlayList(getJTable());
+				}
 				
-				// Ajout de la bibliotheque
-				playController.changeInPlayList(getJTable());
 			}
 		});
 		JScrollPane scrollPane = new JScrollPane(table);
@@ -218,17 +242,27 @@ public class AllFiles implements Observer {
 	
 	public void importBibliotheque(){
 		List<Map<String,Object>> bibliotheque = this.model.getBibliotheque();
-		for(int i=0; i<bibliotheque.size() ; i++){
-			String title = (String) bibliotheque.get(i).get("title");
-			String artist = (String) bibliotheque.get(i).get("artist");
-			String album = (String) bibliotheque.get(i).get("album");
-			String genre = (String) bibliotheque.get(i).get("genre");
-			String year = (String) bibliotheque.get(i).get("year");
-			String duration = (String) bibliotheque.get(i).get("duration");
-			Integer id = (Integer) bibliotheque.get(i).get("id");
-			String pathname = (String) bibliotheque.get(i).get("pathname");
-			this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString(), pathname});
+		Integer sizeBibliotheque = bibliotheque.size();
+		if(sizeBibliotheque > 0){
+			haveSong = true;
+			for(int i=0; i< sizeBibliotheque; i++){
+				String title = (String) bibliotheque.get(i).get("title");
+				String artist = (String) bibliotheque.get(i).get("artist");
+				String album = (String) bibliotheque.get(i).get("album");
+				String genre = (String) bibliotheque.get(i).get("genre");
+				String year = (String) bibliotheque.get(i).get("year");
+				String duration = (String) bibliotheque.get(i).get("duration");
+				Integer id = (Integer) bibliotheque.get(i).get("id");
+				String pathname = (String) bibliotheque.get(i).get("pathname");
+				this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString(), pathname});
+			}
+		}else{
+			for(int i=0; i < 32; i++){
+				this.modelTable.addRow(new String[] {"", "", "", "", "", "", "", ""});
+			}
 		}
+		
+		
 	}
 	
 	public List<Map<String, Object>> getJTable(){
@@ -247,6 +281,11 @@ public class AllFiles implements Observer {
 	public void update(Observable o, Object arg) {
 		List<Map<String,Object>> bibliotheque = this.model.getBibliotheque();
 		if(arg==null){
+			if(!haveSong){
+				for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
+					this.modelTable.removeRow(i);
+				haveSong = true;
+			}
 			// Ajout du dernier element de la bibliotheque
 			String title = (String) bibliotheque.get(bibliotheque.size()-1).get("title");
 			String artist = (String) bibliotheque.get(bibliotheque.size()-1).get("artist");
@@ -257,21 +296,28 @@ public class AllFiles implements Observer {
 			Integer id = (Integer) bibliotheque.get(bibliotheque.size()-1).get("id");
 			String pathname = (String) bibliotheque.get(bibliotheque.size()-1).get("pathname");
 			this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString(), pathname});
-		}else{
+		}else if(arg.equals("view_library")){
 			for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
 				this.modelTable.removeRow(i);
-			String filter = ((String) arg).toLowerCase();
-			for(int i=0; i<bibliotheque.size() ; i++){
-				String title = (String) bibliotheque.get(i).get("title");
-				String artist = (String) bibliotheque.get(i).get("artist");
-				String album = (String) bibliotheque.get(i).get("album");
-				String genre = (String) bibliotheque.get(i).get("genre");
-				String year = (String) bibliotheque.get(i).get("year");
-				String duration = (String) bibliotheque.get(i).get("duration");
-				Integer id = (Integer) bibliotheque.get(i).get("id");
-				String pathname = (String) bibliotheque.get(i).get("pathname");
-				if(title.toLowerCase().contains(filter) || artist.toLowerCase().contains(filter) || album.toLowerCase().contains(filter) || genre.toLowerCase().contains(filter))
-					this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString(), pathname});
+			importBibliotheque();
+			
+		}else{
+			if(!haveSong){
+				for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
+					this.modelTable.removeRow(i);
+				String filter = ((String) arg).toLowerCase();
+				for(int i=0; i<bibliotheque.size() ; i++){
+					String title = (String) bibliotheque.get(i).get("title");
+					String artist = (String) bibliotheque.get(i).get("artist");
+					String album = (String) bibliotheque.get(i).get("album");
+					String genre = (String) bibliotheque.get(i).get("genre");
+					String year = (String) bibliotheque.get(i).get("year");
+					String duration = (String) bibliotheque.get(i).get("duration");
+					Integer id = (Integer) bibliotheque.get(i).get("id");
+					String pathname = (String) bibliotheque.get(i).get("pathname");
+					if(title.toLowerCase().contains(filter) || artist.toLowerCase().contains(filter) || album.toLowerCase().contains(filter) || genre.toLowerCase().contains(filter))
+						this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, id.toString(), pathname});
+				}
 			}
 		}
 	}
