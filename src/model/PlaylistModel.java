@@ -74,4 +74,14 @@ public class PlaylistModel extends Observable{
 		return null;
 	}
 
+	public void removeToPlaylist(String playlistNameSaw, Integer id_song) {
+		List<Map<String, Object>> songs = findSongsByName(playlistNameSaw);
+		Integer index = HelpForList.instance.indexById(songs, id_song);
+		Integer index_name = HelpForList.instance.indexByName(allPlaylist, playlistNameSaw);
+		Map<String, Object> song = ((List<Map<String, Object>>) allPlaylist.get(index_name).get("songs")).get(index);
+		((List<Map<String, Object>>) allPlaylist.get(index_name).get("songs")).remove(song);
+		setChanged();
+		notifyObservers("remove_to_playlist:"+id_song+"/"+playlistNameSaw);
+	}
+
 }

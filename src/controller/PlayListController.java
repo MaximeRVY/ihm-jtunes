@@ -31,4 +31,8 @@ public class PlayListController {
 		}
 	}
 
+	public void removeToPlaylist(String playlistNameSaw, Integer id_song) {
+		playlistModel.removeToPlaylist(playlistNameSaw, id_song);
+	}
+
 }

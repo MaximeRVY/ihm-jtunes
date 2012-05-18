@@ -198,7 +198,7 @@ public class ImportExportBibliotheque implements Observer{
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30); 
 			
-			statement.executeUpdate("DELETE songs"+
+			statement.executeUpdate("DELETE FROM songs"+
 						" WHERE id="+id);
 		}catch (Exception e) {
 			e.printStackTrace();

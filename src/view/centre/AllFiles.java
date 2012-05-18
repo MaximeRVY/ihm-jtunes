@@ -54,6 +54,7 @@ public class AllFiles implements Observer {
 	private PlaylistModel playlistModel;
 	private Boolean haveSong;
 	private String filter = "";
+	private String playlistNameSaw;
 	
 	public AllFiles(JPanel panelCentre, LibraryModel model, LibraryController libraryController, PlayController playController, PlaylistModel playlistModel, PlayListController playlistControllerCenter){
 		this.panelCentre = panelCentre;
@@ -63,6 +64,7 @@ public class AllFiles implements Observer {
 		this.playlistModel = playlistModel;
 		this.playlistController = playlistControllerCenter;
 		this.haveSong = false;
+		this.playlistNameSaw = "";
 		createAllFiles();
 		
 		this.playlistModel.addObserver(this);
@@ -247,7 +249,7 @@ public class AllFiles implements Observer {
 	
 	public void changePopUpMenu(){
 		this.popupMenu = new JPopupMenu();
-		JMenuItem menuItem = new JMenuItem("Remove");
+		JMenuItem menuItem = new JMenuItem("Remove to the Library");
 		menuItem.addActionListener(new ActionListener() {
 			
 			@Override
@@ -259,6 +261,20 @@ public class AllFiles implements Observer {
 			}
 		});
 		this.popupMenu.add(menuItem);
+		if(!playlistNameSaw.isEmpty()){
+			menuItem = new JMenuItem("Remove to Playlist");
+			menuItem.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					Integer id_song = Integer.parseInt((String) modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 7));
+					playlistController.removeToPlaylist(playlistNameSaw, id_song);
+					//modelTable.removeRow(table.convertRowIndexToModel(table.getSelectedRow()));
+				}
+			});
+			this.popupMenu.add(menuItem);
+		}
+		
 		
 		List<Map<String, Object>> playlists = playlistModel.GetAllPlaylist();
 		if(playlists.size() > 0){
@@ -328,6 +344,8 @@ public class AllFiles implements Observer {
 		for(int i=0; i<bibliotheque.size() ; i++){
 			addRowJTable(bibliotheque, i);
 		}
+		playlistNameSaw = "";
+		changePopUpMenu();
 	}
 	
 	@Override
@@ -345,9 +363,11 @@ public class AllFiles implements Observer {
 			for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
 				this.modelTable.removeRow(i);
 			importBibliotheque();
-			
+			playlistNameSaw = "";
+			changePopUpMenu();			
 		}else if(((String) arg).startsWith("view_playlist:")){
 			String namePlaylist = ((String) arg).split("view_playlist:")[1];
+			playlistNameSaw = namePlaylist;
 			List<Map<String, Object>> songs = this.playlistModel.findSongsByName(namePlaylist);
 			if(songs != null && songs.size() > 0){
 				haveSong = true;
@@ -365,6 +385,7 @@ public class AllFiles implements Observer {
 					String pathname = (String) song.get("pathname");
 					this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, nb.toString(), id.toString(), pathname});
 				}
+				changePopUpMenu();
 			}else{
 				for(int i=this.table.getRowCount()-1 ; i>=0 ; i--)
 					this.modelTable.removeRow(i);

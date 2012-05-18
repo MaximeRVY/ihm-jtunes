@@ -52,8 +52,8 @@ public class ImportExportPlaylist implements Observer{
 			try{
 				statement.executeUpdate("create table playlist_song (id_playlist integer," +
 						" id_song integer," +
-						" FOREIGN KEY(id_song) REFERENCES songs(id)," +
-						" FOREIGN KEY(id_playlist) REFERENCES playlists(id) )");
+						" FOREIGN KEY(id_song) REFERENCES songs(id) ON DELETE CASCADE," +
+						" FOREIGN KEY(id_playlist) REFERENCES playlists(id) ON DELETE CASCADE)");
 				
 			}catch (Exception e) {
 				//e.printStackTrace();
@@ -146,6 +146,40 @@ public class ImportExportPlaylist implements Observer{
 		}
 		
 	}
+	
+	private void deleteToPlaylist(Integer idPlaylist, String id_song) {
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Connection connection = null;
+		try {
+			connection = DriverManager.getConnection("jdbc:sqlite:" + basePath);
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); 
+			statement.executeUpdate("DELETE FROM playlist_song "+
+						"WHERE id_song="+id_song+
+						" AND id_playlist="+idPlaylist);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}finally
+		{
+			try
+			{
+				if(connection != null)
+					connection.close();
+			}
+			catch(SQLException e)
+			{
+				// connection close failed.
+				System.err.println(e);
+			}
+		}
+		
+	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
@@ -162,12 +196,16 @@ public class ImportExportPlaylist implements Observer{
 			List<Map<String, Object>> songs = (List<Map<String, Object>>) playlist.get("songs");
 			Integer lastIdAdded = (Integer) songs.get(songs.size() - 1).get("id");
 			AddToPlaylist(idPlaylist, lastIdAdded);
+		}else if( argument != null && argument.startsWith("remove_to_playlist:")){
+			String result = argument.split("remove_to_playlist:")[1];
+			String namePlaylist = result.split("/")[1];
+			Map<String, Object> playlist = model.findByName(namePlaylist);
+			Integer idPlaylist = (Integer) playlist.get("id");
+			String id_song = result.split("/")[0];
+			deleteToPlaylist(idPlaylist, id_song);			
 		}
 		
 	}
-
-	
-
 	
 
 }
