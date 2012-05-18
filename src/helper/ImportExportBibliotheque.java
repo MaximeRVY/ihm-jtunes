@@ -39,7 +39,7 @@ public class ImportExportBibliotheque implements Observer{
 			
 			try{
 				statement.executeUpdate("create table songs (id integer PRIMARY KEY,title string, artist string, album string, genre string," +
-						"year string, duration string, pathname string)");
+						"year string, duration string, pathname string, nb integer)");
 			}catch(Exception e){
 				
 			}
@@ -101,9 +101,9 @@ public class ImportExportBibliotheque implements Observer{
 			//Statement statement = connection.createStatement();
 			//statement.setQueryTimeout(30);
 			PreparedStatement statement = connection.prepareStatement("insert into songs" +
-					"(id, title, artist, album, genre, year, duration , pathname)" +
+					"(id, title, artist, album, genre, year, duration , pathname, nb)" +
 					" values" +
-					"(? , ? , ? , ? , ? , ? , ? , ?);");
+					"(? , ? , ? , ? , ? , ? , ? , ?, ?);");
 			String title = (String) song.get("title");
 			String artist = (String) song.get("artist");
 			String album = (String) song.get("album");
