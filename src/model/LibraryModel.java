@@ -115,7 +115,7 @@ public class LibraryModel extends Observable{
 			album = album.split("\\?\\?TAL :")[1].trim();
 		}
 			
-	   if(genre.isEmpty())
+	   if(genre == null || (genre != null && genre.isEmpty()))
 		   genre = "Unknow";
 	   if(year.isEmpty())
 		   year = "";
