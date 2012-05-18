@@ -103,6 +103,8 @@ public class AllFiles implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println("Supprimer");
+				model.removeFile((Integer.valueOf((String) modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6))));
+				modelTable.removeRow(table.convertRowIndexToModel(table.getSelectedRow()));
 				
 			}
 		});

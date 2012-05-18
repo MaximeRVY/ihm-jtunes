@@ -236,4 +236,8 @@ public class LibraryModel extends Observable{
 		notifyObservers("view_library");
 		
 	}
+	
+	public void removeFile(Integer id){
+		bibliotheque.remove(findById(id));
+	}
 }
