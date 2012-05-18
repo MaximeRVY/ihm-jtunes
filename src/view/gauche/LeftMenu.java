@@ -1,13 +1,19 @@
 package view.gauche;
 
 import java.awt.Dimension;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.io.BufferedReader;
+import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.TransferHandler;
 
 import model.LibraryModel;
 import model.PlaylistModel;
@@ -58,6 +64,58 @@ public class LeftMenu implements Observer {
 		importAllplaylist();
 		listModel.addItemToCategory(new SourceListItem("Add a Playlist"), playlist_source_list);
 		SourceList sourceList = new SourceList(listModel);
+		
+		sourceList.setTransferHandler(new TransferHandler(){
+			public boolean canImport(JComponent dest, DataFlavor[] flavors) {
+		         return true;
+		      }
+
+		      public boolean importData(JComponent src, Transferable transferable) {
+		    	  DataFlavor[] flavors = transferable.getTransferDataFlavors();
+		    	  DataFlavor listFlavor = null;
+		    	  DataFlavor objectFlavor = null;
+		    	  DataFlavor readerFlavor = null;
+		    	  int lastFlavor = flavors.length - 1;
+
+		    	  for (int f = 0; f <= lastFlavor; f++) {
+		    	      if (flavors[f].isFlavorJavaFileListType()) {
+		    	        listFlavor = flavors[f];
+		    	      }
+		    	      if (flavors[f].isFlavorSerializedObjectType()) {
+		    	        objectFlavor = flavors[f];
+		    	      }
+		    	      if (flavors[f].isRepresentationClassReader()) {
+		    	        readerFlavor = flavors[f];
+		    	      }
+		    	    }
+		    	  
+		    	try {
+		    		  DataFlavor bestTextFlavor = DataFlavor
+			    	          .selectBestTextFlavor(flavors);
+			    	      BufferedReader br = null;
+			    	      String line = null;
+			    	  if (bestTextFlavor != null){
+			        	Reader r = bestTextFlavor.getReaderForText(transferable);
+			            br = new BufferedReader(r);
+			            line = br.readLine();
+			            while (line != null) {
+			            	String data = line.trim();
+				            String[] result = data.split("file://");
+						    if(result.length == 2){
+						    	libraryController.importFile(result[1].trim());
+						    }
+						       
+				              line = br.readLine();
+			            }
+			            br.close();
+			          }
+				} catch (Exception e) {
+					// TODO: handle exception
+					return false;
+				}
+				return true;     
+		      } 
+		});
 		
 		sourceList.addSourceListClickListener(new SourceListClickListener() {
 			
