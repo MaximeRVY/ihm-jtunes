@@ -4,13 +4,15 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,8 +32,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
-import javax.swing.TransferHandler.TransferSupport;
+import javax.swing.event.MouseInputListener;
 import javax.swing.table.DefaultTableModel;
+
+import transferable.DragTableListener;
 
 import model.LibraryModel;
 import model.PlaylistModel;
@@ -173,37 +177,31 @@ public class AllFiles implements Observer {
 				}
 				return true;     
 		      } 
+		      
+		    public int getSourceActions(JComponent c) {
+		  		return COPY;
+		  	}
+		    
+		    
+		      
+		      
 		});
+		this.table.setDragEnabled(true);
+		new DragTableListener(this.table, this.modelTable);
 		// Ajout du double clic
-		this.table.addMouseListener(new MouseListener() {
+		this.table.addMouseListener(new MouseInputListener() {
+			
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				if(haveSong && arg0.getClickCount() == 2){
-					playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 7))));
-					System.out.println((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 7)));
-					// Ajout de la bibliotheque
-					playController.changeInPlayList(getJTable());
-				}
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
+			public void mouseMoved(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
-
+			
 			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
+			public void mouseDragged(MouseEvent e) {
 				
 			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
+			
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				if(haveSong && e.getButton() == MouseEvent.BUTTON3 && e.isPopupTrigger()){
@@ -214,6 +212,34 @@ public class AllFiles implements Observer {
 				 	popupMenu.show(e.getComponent(), e.getX(), e.getY());
 				}
 					
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(haveSong && arg0.getClickCount() == 2){
+					playController.loadAndPlay(Integer.valueOf((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 7))));
+					System.out.println((String) (modelTable.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 7)));
+					// Ajout de la bibliotheque
+					playController.changeInPlayList(getJTable());
+				}
 			}
 		});
 		
