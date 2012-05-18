@@ -254,14 +254,14 @@ public class AllFiles implements Observer {
 				String genre = (String) bibliotheque.get(i).get("genre");
 				String year = (String) bibliotheque.get(i).get("year");
 				String duration = (String) bibliotheque.get(i).get("duration");
-				Integer nb = (Integer) bibliotheque.get(i).get("NB");
+				Integer nb = (Integer) bibliotheque.get(i).get("nb");
 				Integer id = (Integer) bibliotheque.get(i).get("id");
 				String pathname = (String) bibliotheque.get(i).get("pathname");
 				this.modelTable.addRow(new String[] {title, artist, album, duration, genre, year, nb.toString(), id.toString(), pathname});
 			}
 		}else{
 			for(int i=0; i < 32; i++){
-				this.modelTable.addRow(new String[] {"", "", "", "", "", "", "", ""});
+				this.modelTable.addRow(new String[] {"", "", "", "", "", "", "", "", ""});
 			}
 		}
 		

@@ -17,6 +17,7 @@ import org.tritonus.share.sampled.file.TAudioFileFormat;
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
+import com.sun.xml.internal.bind.v2.runtime.reflect.ListIterator;
 
 public class LibraryModel extends Observable{
 	// model pour la bibliotheque, les playlist et la current playlist
@@ -240,5 +241,17 @@ public class LibraryModel extends Observable{
 	
 	public void removeFile(Integer id){
 		bibliotheque.remove(findById(id));
+	}
+	
+	public void incrementeLecture(Integer id){
+		java.util.ListIterator<Map<String, Object>> it = bibliotheque.listIterator();
+		while(it.hasNext()){
+			Map<String, Object> file = it.next();
+			if(file.get("id").equals(id)){
+				int nb = (Integer) file.get("nb");
+				file.put("nb", nb++);
+				it.set(file);
+			}
+		}
 	}
 }

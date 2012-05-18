@@ -29,12 +29,18 @@ public class PlayModel extends Observable{
 	
 	private Boolean random;
 	
+	private LibraryModel libraryModel;
+	
 	public PlayModel() {
 		player = null;
 		currentPlayed = new HashMap<String, Object>();
 		state = 0;
 		queue = new ArrayList<Map<String,Object>>();
 		random = false;
+	}
+	
+	public void addLibModel(LibraryModel libraryModel){
+		this.libraryModel = libraryModel;
 	}
 	
 	public Map<String, Object> getCurrentPlayed() {
@@ -211,6 +217,7 @@ public class PlayModel extends Observable{
 				}
 				
 				if(player == playerInterne){
+					libraryModel.incrementeLecture((Integer) currentPlayed.get("id"));
 					// End Event
 					parent.next();
 					parent.sendToObservable();

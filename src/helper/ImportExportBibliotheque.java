@@ -59,7 +59,7 @@ public class ImportExportBibliotheque implements Observer{
 		    	song.put("genre", rs.getString("genre"));
 		    	song.put("year", rs.getString("year"));
 		    	song.put("duration", rs.getString("duration"));
-		    	song.put("year", rs.getInt("nb"));
+		    	song.put("nb", rs.getInt("nb"));
 		    	song.put("pathname", rs.getString("pathname"));
 		    	
 		    	songs.add(song);
